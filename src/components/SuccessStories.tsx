@@ -1,71 +1,90 @@
 import { motion } from 'framer-motion';
-import { BookOpen, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { BookOpen, CheckCircle2, TrendingUp, Quote } from 'lucide-react';
 
-export const SuccessStories = () => {
-  return (
-    <section className="py-32 px-6 bg-emerald-500/5">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-black mb-8 leading-tight">
-            Casos de <span className="text-emerald-500">Éxito Nexus</span>
-          </h2>
-          <p className="text-slate-400 text-xl font-light italic">
-            "El fin del cuaderno: Cómo la metodología SmartLean está salvando los márgenes de los talleres mecánicos en Chile"
-          </p>
-        </div>
+const results = [
+  '+25% rotación de elevadores',
+  'Cero pérdida de repuestos en bodega',
+  'Trazabilidad real de horas-hombre',
+  'Cobros sin fugas por mano de obra',
+  'Fidelización automatizada post-servicio',
+];
 
-        <div className="glass-card overflow-hidden border-emerald-500/20 shadow-2xl shadow-emerald-500/5">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div className="p-12 lg:p-20 bg-emerald-500/10 flex flex-col justify-center">
-              <div className="size-16 rounded-2xl bg-emerald-500 text-black flex items-center justify-center mb-8">
-                <BookOpen size={32} />
-              </div>
-              <h3 className="text-3xl font-black mb-6 leading-tight">Del Caos del Papel a la <span className="text-emerald-400">Eficiencia 5.0</span></h3>
-              <p className="text-slate-300 text-lg leading-relaxed mb-8">
-                Históricamente, el taller mecánico chileno ha dependido del cuaderno. Un sistema propenso al error, al olvido y, sobre todo, a la pérdida de rentabilidad.
-              </p>
-              <div className="space-y-4">
-                {[
-                  'Aumento del 25% en rotación de elevadores.',
-                  'Eliminación total de pérdida de repuestos.',
-                  'Trazabilidad real de horas hombre por servicio.',
-                  'Fidelización automática vía Nexus Connect.'
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 text-emerald-400 font-bold uppercase tracking-widest text-xs">
-                    <CheckCircle2 size={16} />
-                    {item}
-                  </div>
-                ))}
-              </div>
+export const SuccessStories = () => (
+  <section id="casos" style={{ padding: '8rem 0', background: 'var(--surface-1)', position: 'relative', overflow: 'hidden' }}>
+    <div className="blob blob-em" style={{ width: 500, height: 500, bottom: '-15%', left: '-10%', opacity: 0.25 }} />
+    <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+      <div style={{ marginBottom: '5rem' }}>
+        <div className="badge" style={{ marginBottom: '1.5rem' }}>Casos de Éxito</div>
+        <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, lineHeight: 1.1 }}>
+          <span className="gradient-em">El Fin del Cuaderno</span>
+        </h2>
+        <p style={{ marginTop: '1rem', color: 'var(--text-2)', fontSize: '1.1rem', fontStyle: 'italic', maxWidth: '700px', lineHeight: 1.6 }}>
+          Cómo la metodología SmartLean está salvando los márgenes de los talleres mecánicos en Chile
+        </p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'start' }}>
+        {/* Left: narrative */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+          style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
+        >
+          <div className="card" style={{ padding: '2.5rem' }}>
+            <div style={{ display: 'flex', gap: '.75rem', marginBottom: '1.5rem', color: 'var(--em)' }}>
+              <Quote size={28} />
             </div>
-            
-            <div className="p-12 lg:p-20 flex flex-col justify-center gap-10">
-              <div className="relative">
-                <div className="absolute -left-8 top-0 bottom-0 w-1 bg-emerald-500/20" />
-                <h4 className="text-xl font-black mb-4 uppercase tracking-widest text-slate-500">La Propuesta para Distribuidores</h4>
-                <p className="text-slate-400 text-lg leading-relaxed">
-                  "No solo les traigo un software para sus clientes, les traigo una metodología probada para que sus talleres sean más rentables y leales a su marca".
-                </p>
-              </div>
+            <p style={{ fontSize: '1.1rem', lineHeight: 1.75, color: 'var(--text-2)', fontStyle: 'italic' }}>
+              "Históricamente, el taller mecánico chileno ha dependido del cuaderno. Un sistema propenso al error, al olvido y a la pérdida silenciosa de rentabilidad."
+            </p>
+            <p style={{ marginTop: '1.5rem', color: 'var(--text-1)', fontWeight: 600 }}>— Diagnóstico SmartLean, 2026</p>
+          </div>
 
-              <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/5">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 rounded-xl bg-sky-500/10 text-sky-500">
-                    <TrendingUp size={24} />
-                  </div>
-                  <span className="font-black uppercase tracking-widest text-sm text-white">Impacto en el Margen</span>
-                </div>
-                <div className="text-5xl font-black text-emerald-500 mb-2">+40%</div>
-                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Incremento promedio en rentabilidad operativa post-implementación SmartLean.</p>
-              </div>
-
-              <button className="w-full py-5 bg-white text-black font-black uppercase tracking-[0.2em] text-xs rounded-2xl hover:bg-emerald-500 transition-all">
-                Descargar Whitepaper de Metodología
-              </button>
+          <div className="card" style={{ padding: '2.5rem' }}>
+            <p style={{ fontSize: '.7rem', fontWeight: 800, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--text-3)', marginBottom: '1.5rem' }}>Propuesta para Distribuidores</p>
+            <div className="line-left">
+              <p style={{ color: 'var(--text-2)', lineHeight: 1.75, fontSize: '1rem' }}>
+                No solo les traemos un software para sus clientes, les traemos una <strong style={{ color: 'var(--text-1)' }}>metodología probada</strong> para que sus talleres sean más rentables y leales a su marca.
+              </p>
             </div>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Right: KPIs + checklist */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+          style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
+        >
+          {/* Big stat */}
+          <div className="card" style={{ padding: '2.5rem', background: 'linear-gradient(135deg, rgba(0,229,160,.08) 0%, rgba(56,189,248,.05) 100%)', borderColor: 'var(--border-em)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+              <TrendingUp size={22} color="var(--em)" />
+              <span style={{ fontSize: '.7rem', fontWeight: 800, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--em)' }}>Impacto Promedio Post-Implementación</span>
+            </div>
+            <div className="stat-number">+40%</div>
+            <p style={{ color: 'var(--text-2)', fontSize: '.85rem', marginTop: '.75rem' }}>Incremento en rentabilidad operativa</p>
+          </div>
+
+          {/* Results list */}
+          <div className="card" style={{ padding: '2.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '1.5rem' }}>
+              <BookOpen size={20} color="var(--em)" />
+              <span style={{ fontSize: '.7rem', fontWeight: 800, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--text-3)' }}>Resultados Documentados</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '.85rem' }}>
+              {results.map((r, i) => (
+                <div key={i} style={{ display: 'flex', gap: '.75rem', alignItems: 'flex-start' }}>
+                  <CheckCircle2 size={17} color="var(--em)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span style={{ color: 'var(--text-2)', fontSize: '.95rem' }}>{r}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+            Descargar Whitepaper de Metodología
+          </button>
+        </motion.div>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);

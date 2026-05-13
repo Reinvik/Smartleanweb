@@ -1,3 +1,4 @@
+import './index.css';
 import { Hero } from './components/Hero';
 import { Pillars } from './components/Pillars';
 import { AICapabilities } from './components/AICapabilities';
@@ -5,66 +6,107 @@ import { DoubleMotor } from './components/DoubleMotor';
 import { SuccessStories } from './components/SuccessStories';
 import { Ecosystem } from './components/Ecosystem';
 import { AIConcierge } from './components/AIConcierge';
+import { useState, useEffect } from 'react';
+
+const NAV_LINKS = [
+  { label: 'Metodología', href: '#metodologia' },
+  { label: 'IA', href: '#ia' },
+  { label: 'Servicios', href: '#servicios' },
+  { label: 'Casos', href: '#casos' },
+  { label: 'Ecosistema', href: '#ecosistema' },
+];
 
 function App() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const navStyle: React.CSSProperties = {
+    position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+    padding: '1.25rem 2rem',
+    transition: 'all .35s',
+    ...(scrolled ? {
+      background: 'rgba(5,8,16,.85)',
+      backdropFilter: 'blur(20px)',
+      borderBottom: '1px solid rgba(255,255,255,.06)',
+      padding: '.85rem 2rem',
+    } : {})
+  };
+
   return (
-    <div className="min-h-screen bg-[#020617] selection:bg-emerald-500/30 selection:text-emerald-200">
-      <div className="noise-overlay" />
-      
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 px-6 py-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between glass-card px-8 py-4 rounded-2xl border-white/5">
-          <div className="flex items-center gap-2">
-            <div className="size-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-              <span className="text-black font-black text-xl">S</span>
+    <div style={{ background: 'var(--void)', minHeight: '100vh', color: 'var(--text-1)' }}>
+      <div className="grid-overlay" />
+
+      {/* ── NAV ─────────────────────────────────────────────── */}
+      <nav style={navStyle}>
+        <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 0 }}>
+          {/* Logo */}
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '.75rem', textDecoration: 'none', color: 'inherit' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--em)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '1.2rem', color: '#020a14', lineHeight: 1 }}>S</span>
             </div>
-            <span className="font-black text-xl tracking-tighter uppercase">SmartLean</span>
+            <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-.02em', textTransform: 'uppercase' }}>SmartLean</span>
+          </a>
+
+          {/* Desktop links */}
+          <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
+            {NAV_LINKS.map(l => (
+              <a key={l.href} href={l.href} style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-2)', textDecoration: 'none', transition: 'color .2s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--em)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-2)')}
+              >{l.label}</a>
+            ))}
           </div>
-          
-          <div className="hidden md:flex items-center gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
-            <a href="#" className="hover:text-emerald-500 transition-colors">Metodología</a>
-            <a href="#" className="hover:text-emerald-500 transition-colors">Servicios</a>
-            <a href="#" className="hover:text-emerald-500 transition-colors">Ecosistema</a>
-            <a href="#" className="hover:text-emerald-500 transition-colors">Contacto</a>
-          </div>
-          
-          <button className="px-5 py-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-emerald-500 hover:text-black transition-all">
-            Consultoría
-          </button>
+
+          <a href="mailto:ariel@smartlean.cl" className="btn-primary" style={{ padding: '.65rem 1.5rem', fontSize: '.72rem' }}>
+            Contactar
+          </a>
         </div>
       </nav>
 
+      {/* ── MAIN ─────────────────────────────────────────────── */}
       <main>
         <Hero />
+        <div className="divider" />
         <Pillars />
+        <div className="divider" />
         <AICapabilities />
+        <div className="divider" />
         <DoubleMotor />
+        <div className="divider" />
         <SuccessStories />
+        <div className="divider" />
         <Ecosystem />
-        <AIConcierge />
-        
-        {/* Simple Footer */}
-        <footer className="py-20 px-6 border-t border-white/5">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center gap-2">
-              <div className="size-6 bg-emerald-500/20 rounded flex items-center justify-center">
-                <span className="text-emerald-500 font-black text-sm">S</span>
-              </div>
-              <span className="font-black text-sm tracking-tighter uppercase opacity-50">SmartLean Chile</span>
-            </div>
-            
-            <div className="flex gap-10 text-[9px] font-black text-slate-600 uppercase tracking-widest">
-              <span>© 2026 SmartLean</span>
-              <span>Chile - Operational Excellence 5.0</span>
-            </div>
-            
-            <div className="flex gap-6">
-              <a href="#" className="text-slate-600 hover:text-emerald-500 transition-colors">LinkedIn</a>
-              <a href="#" className="text-slate-600 hover:text-emerald-500 transition-colors">Twitter</a>
-            </div>
-          </div>
-        </footer>
       </main>
+
+      {/* ── FOOTER ───────────────────────────────────────────── */}
+      <footer style={{ borderTop: '1px solid var(--border)', padding: '3rem 0', marginTop: '4rem' }}>
+        <div className="container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+            <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--em-dim)', border: '1px solid var(--border-em)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontFamily: 'Syne', fontWeight: 800, color: 'var(--em)', fontSize: '1rem', lineHeight: 1 }}>S</span>
+            </div>
+            <span style={{ fontFamily: 'Syne', fontWeight: 700, fontSize: '.85rem', color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '.05em' }}>SmartLean Chile · 2026</span>
+          </div>
+          <p style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)' }}>
+            Operational Excellence 4.0 → 5.0
+          </p>
+          <div style={{ display: 'flex', gap: '1.5rem' }}>
+            {['LinkedIn', 'GitHub', 'Email'].map(s => (
+              <a key={s} href={s === 'Email' ? 'mailto:ariel@smartlean.cl' : '#'} style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)', textDecoration: 'none', transition: 'color .2s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--em)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-3)')}
+              >{s}</a>
+            ))}
+          </div>
+        </div>
+      </footer>
+
+      <AIConcierge />
     </div>
   );
 }

@@ -1,46 +1,63 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight, Zap, ChevronRight } from 'lucide-react';
+
+const words = ['Rentabilidad.', 'Eficiencia.', 'Futuro.'];
 
 export const Hero = () => {
+  const [wordIdx, setWordIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setWordIdx(i => (i + 1) % words.length), 2500);
+    return () => clearInterval(t);
+  }, []);
+
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 px-6 overflow-hidden">
-      <div className="mesh-gradient" />
-      
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="max-w-5xl mx-auto text-center z-10"
-      >
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-8">
-          <Zap size={14} className="fill-emerald-400" />
-          <span>Bridging Excellence 4.0 to 5.0</span>
-        </div>
-        
-        <h1 className="text-5xl md:text-8xl font-extrabold mb-8 leading-tight premium-gradient-text">
-          SmartLean: La Metodología que <span className="emerald-gradient-text">Instala el Futuro</span>
-        </h1>
-        
-        <p className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 font-light leading-relaxed">
-          No vendemos software, instalamos sistemas operativos empresariales. 
-          Transformamos el caos operativo en un flujo inteligente, desatendido y rentable.
-        </p>
-        
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-          <button className="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl transition-all flex items-center gap-2 group shadow-lg shadow-emerald-500/20">
-            Agenda tu Diagnóstico SmartLean
-            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-          </button>
-          <button className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 transition-all">
-            Ver Ecosistema Nexus
-          </button>
-        </div>
-      </motion.div>
-      
-      {/* Decorative elements */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30">
-        <div className="w-px h-12 bg-gradient-to-b from-emerald-500 to-transparent" />
-        <span className="text-[10px] font-black uppercase tracking-[0.4em]">Scroll to Explore</span>
+    <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', paddingTop: '100px', overflow: 'hidden' }}>
+      {/* Blobs */}
+      <div className="blob blob-em" style={{ width: 700, height: 700, top: '-20%', left: '-15%', opacity: 0.6 }} />
+      <div className="blob blob-sky" style={{ width: 500, height: 500, bottom: '-10%', right: '-10%', opacity: 0.4 }} />
+
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .9 }}>
+          <div className="badge" style={{ marginBottom: '2rem' }}>
+            <Zap size={12} />
+            Metodología Propietaria · Industry 5.0
+          </div>
+
+          <h1 style={{ fontSize: 'clamp(3rem, 8vw, 7rem)', fontWeight: 800, lineHeight: 1.05, marginBottom: '1.5rem' }}>
+            <span className="gradient-title">Instalamos</span><br />
+            <span className="gradient-em">{words[wordIdx]}</span><br />
+            <span className="gradient-title">En tu Empresa.</span>
+          </h1>
+
+          <p style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: 'var(--text-2)', maxWidth: '620px', lineHeight: 1.7, marginBottom: '3rem' }}>
+            SmartLean es el puente entre la excelencia operacional 4.0 y la inteligencia autónoma 5.0. 
+            Datos, IA y metodología Lean, orquestados como un solo sistema.
+          </p>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '5rem' }}>
+            <button className="btn-primary">
+              Agenda tu Diagnóstico <ArrowRight size={16} />
+            </button>
+            <button className="btn-ghost">
+              Ver Ecosistema Nexus <ChevronRight size={16} />
+            </button>
+          </div>
+
+          {/* Stats row */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem' }}>
+            {[
+              { value: '+40%', label: 'Rentabilidad operativa' },
+              { value: '5', label: 'Pilares metodológicos' },
+              { value: '3+', label: 'Módulos Nexus activos' },
+            ].map((s, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 + i * 0.15 }}>
+                <div className="stat-number">{s.value}</div>
+                <p style={{ fontSize: '.7rem', fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--text-3)', marginTop: '.4rem' }}>{s.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,72 +1,73 @@
-import { Briefcase, Database } from 'lucide-react';
+import { Briefcase, Repeat, Code2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-export const DoubleMotor = () => {
-  return (
-    <section className="py-32 px-6 bg-slate-900/30 border-y border-white/5">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          <div>
-            <h2 className="text-4xl md:text-6xl font-black mb-8 leading-tight">
-              El Modelo de <br />
-              <span className="text-emerald-500 italic">Doble Motor</span> Financiero
-            </h2>
-            <p className="text-slate-400 text-lg mb-12 leading-relaxed">
-              Como consultora tecnológica, SmartLean ofrece una estructura de valor única que garantiza tanto la transformación profunda como el éxito a largo plazo.
-            </p>
-            
-            <div className="space-y-12">
-              <div className="flex gap-6">
-                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 h-fit">
-                  <Briefcase className="text-emerald-500" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2 text-white">Motor 1: Consultoría de Alto Impacto</h3>
-                  <p className="text-slate-500">Diagnóstico inicial, diseño del nuevo proceso y acompañamiento en el "cambio de chip" organizacional.</p>
-                </div>
-              </div>
-              
-              <div className="flex gap-6">
-                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 h-fit">
-                  <Database className="text-sky-500" size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2 text-white">Motor 2: SaaS de Gestión Vital (Recurrente)</h3>
-                  <p className="text-slate-500">Instalación del ecosistema Nexus como el sistema operativo permanente de la empresa.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="relative">
-            <div className="absolute inset-0 bg-emerald-500/10 blur-[100px] rounded-full animate-pulse" />
-            <div className="glass-card p-12 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 text-8xl font-black text-white/5 group-hover:scale-110 transition-transform">0101</div>
-              <h4 className="text-2xl font-black mb-6 uppercase tracking-widest text-emerald-500">Desarrollo a Medida</h4>
-              <p className="text-slate-400 text-xl font-light leading-relaxed mb-8">
-                Construimos aplicaciones con **Filosofía SmartLean**:
-              </p>
-              <ul className="space-y-4 text-slate-300 font-bold uppercase tracking-widest text-xs">
-                <li className="flex items-center gap-3">
-                  <div className="size-1.5 rounded-full bg-emerald-500" />
-                  Flujo Simple sin Desperdicios
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="size-1.5 rounded-full bg-emerald-500" />
-                  Automatización Nativa
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="size-1.5 rounded-full bg-emerald-500" />
-                  Data-Driven en Tiempo Real
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="size-1.5 rounded-full bg-emerald-500" />
-                  Infraestructura Cloud-First
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+export const DoubleMotor = () => (
+  <section id="servicios" style={{ padding: '8rem 0' }}>
+    <div className="container">
+      <div style={{ marginBottom: '5rem' }}>
+        <div className="badge" style={{ marginBottom: '1.5rem' }}>Modelo de Negocio</div>
+        <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, lineHeight: 1.1 }}>
+          <span className="gradient-title">El Doble Motor</span><br />
+          <span className="gradient-em">Financiero</span>
+        </h2>
       </div>
-    </section>
-  );
-};
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
+        {[
+          {
+            icon: Briefcase,
+            color: '#00e5a0',
+            tag: 'Motor 1',
+            title: 'Consultoría Estratégica',
+            body: 'Diagnóstico inicial profundo, diseño del nuevo flujo operativo y acompañamiento durante el "cambio de chip" organizacional. Ticket alto, transformación real.',
+            kpi: 'Proyecto',
+            kpiLabel: 'Pago único + bonos por KPI'
+          },
+          {
+            icon: Repeat,
+            color: '#38bdf8',
+            tag: 'Motor 2',
+            title: 'SaaS: Sistema Operativo Permanente',
+            body: 'Una vez que la consultoría termina, el ecosistema Nexus queda instalado como el sistema operativo del cliente, generando una renta mensual de por vida.',
+            kpi: 'Recurrente',
+            kpiLabel: 'Ingreso mensual garantizado'
+          },
+          {
+            icon: Code2,
+            color: '#a78bfa',
+            tag: 'Motor 3',
+            title: 'Desarrollo a Medida',
+            body: 'Aplicaciones construidas con filosofía SmartLean: flujo simple, automatización nativa, cloud-first y data-driven. Sin desperdicios, ni en el código ni en el proceso.',
+            kpi: 'Proyecto',
+            kpiLabel: 'Personalizado por alcance'
+          },
+        ].map((m, i) => (
+          <motion.div
+            key={i}
+            className="card"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.12 }}
+            style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ padding: '1rem', borderRadius: '14px', background: `${m.color}15`, color: m.color }}>
+                <m.icon size={24} />
+              </div>
+              <span style={{ fontSize: '.6rem', fontWeight: 800, letterSpacing: '.15em', textTransform: 'uppercase', color: m.color, background: `${m.color}15`, padding: '.3rem .8rem', borderRadius: '99px' }}>{m.tag}</span>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '.75rem' }}>{m.title}</h3>
+              <p style={{ color: 'var(--text-2)', lineHeight: 1.7, fontSize: '.95rem' }}>{m.body}</p>
+            </div>
+            <div style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: m.color, fontFamily: 'Syne' }}>{m.kpi}</div>
+              <div style={{ fontSize: '.7rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)', marginTop: '.3rem' }}>{m.kpiLabel}</div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
