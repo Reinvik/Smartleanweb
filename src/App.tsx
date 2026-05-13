@@ -2,8 +2,9 @@ import { Hero } from './components/Hero';
 import { Pillars } from './components/Pillars';
 import { AICapabilities } from './components/AICapabilities';
 import { DoubleMotor } from './components/DoubleMotor';
+import { SuccessStories } from './components/SuccessStories';
 import { Ecosystem } from './components/Ecosystem';
-import { motion } from 'framer-motion';
+import { AIConcierge } from './components/AIConcierge';
 
 function App() {
   return (
@@ -38,7 +39,9 @@ function App() {
         <Pillars />
         <AICapabilities />
         <DoubleMotor />
+        <SuccessStories />
         <Ecosystem />
+        <AIConcierge />
         
         {/* Simple Footer */}
         <footer className="py-20 px-6 border-t border-white/5">

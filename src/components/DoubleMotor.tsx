@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Briefcase, Database } from 'lucide-react';
 
 export const DoubleMotor = () => {
