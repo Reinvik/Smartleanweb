@@ -45,11 +45,28 @@ function App() {
       <nav style={navStyle}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 0 }}>
           {/* Logo */}
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '.75rem', textDecoration: 'none', color: 'inherit' }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--em)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '1.2rem', color: '#020a14', lineHeight: 1 }}>S</span>
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '.6rem', textDecoration: 'none', color: 'inherit' }}>
+            <svg width="32" height="32" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="nlg" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#00e5a0"/>
+                  <stop offset="100%" stopColor="#0ea5e9"/>
+                </linearGradient>
+              </defs>
+              <path d="M4 44 Q14 10 28 18 Q42 26 52 8" stroke="url(#nlg)" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+              {([[28,18],[42,26],[52,8],[36,32],[20,36],[10,28]] as [number,number][]).map(([cx,cy],i)=>(
+                <circle key={i} cx={cx} cy={cy} r="3.5" fill="url(#nlg)" opacity={0.9}/>
+              ))}
+              <line x1="28" y1="18" x2="42" y2="26" stroke="url(#nlg)" strokeWidth="1.5" opacity="0.5"/>
+              <line x1="42" y1="26" x2="52" y2="8" stroke="url(#nlg)" strokeWidth="1.5" opacity="0.5"/>
+              <line x1="28" y1="18" x2="36" y2="32" stroke="url(#nlg)" strokeWidth="1.5" opacity="0.5"/>
+              <line x1="36" y1="32" x2="20" y2="36" stroke="url(#nlg)" strokeWidth="1.5" opacity="0.5"/>
+              <line x1="20" y1="36" x2="10" y2="28" stroke="url(#nlg)" strokeWidth="1.5" opacity="0.5"/>
+            </svg>
+            <div>
+              <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-.02em', textTransform: 'uppercase', display: 'block', lineHeight: 1 }}>SmartLean</span>
+              <span style={{ fontSize: '.5rem', fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--text-3)', display: 'block' }}>Data & AI Consultancy</span>
             </div>
-            <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-.02em', textTransform: 'uppercase' }}>SmartLean</span>
           </a>
 
           {/* Desktop links */}
