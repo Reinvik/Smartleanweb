@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Bot, Loader2, MessageCircle, Zap } from 'lucide-react';
 
-const GEMINI_KEY = 'AIzaSyDDYV0hq2Hgj_8mq-zZYTYM36vQ5LuBW6M';
+
 
 const SYSTEM = `Eres el Concierge IA de SmartLean, una consultora tecnológica chilena de élite. Respondes en español chileno, eres directo, cálido, experto y entusiasta. Nunca dices que no puedes responder — si no tienes información exacta, orientas y ofreces agendar un diagnóstico.
 
@@ -103,7 +103,7 @@ export const AIConcierge = () => {
         parts: [{ text: m.text }]
       }));
 
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
