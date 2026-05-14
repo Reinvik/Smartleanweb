@@ -43,6 +43,8 @@ h1, h2, h3, h4 { font-family: 'Inter', sans-serif; font-weight: 900; letter-spac
 
 /* ─── UTILITIES ───────────────────────────────────────────── */
 .container { max-width: 1280px; margin-inline: auto; padding-inline: 2rem; }
+.grid-responsive-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.grid-responsive-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
 
 .text-em  { color: var(--em); }
 .text-sky { color: var(--sky); }

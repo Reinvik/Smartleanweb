@@ -263,12 +263,7 @@ export const TechCore = () => {
         </div>
 
         {/* ── Grid ── */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '3rem',
-          alignItems: 'center',
-        }}>
+        <div className="grid-responsive-2" style={{ gap: '3rem', alignItems: 'center' }}>
 
           {/* LEFT: Node Map — CSS Grid 3×3 (always centered) */}
           <motion.div
@@ -283,8 +278,9 @@ export const TechCore = () => {
               gridTemplateColumns: '1fr 1fr 1fr',
               gridTemplateRows: '1fr 1fr 1fr',
               gap: '0.75rem',
-              width: 'min(100%, 440px)',
-              aspectRatio: '1 / 1',
+              width: '100%',
+              maxWidth: 480,
+              aspectRatio: '1/1',
               position: 'relative',
             }}>
               {/* SVG overlay for connection lines */}
