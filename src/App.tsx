@@ -107,18 +107,24 @@ function App() {
             <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--em-dim)', border: '1px solid var(--border-em)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontFamily: 'Inter', fontWeight: 900, color: 'var(--em)', fontSize: '1rem', lineHeight: 1 }}>S</span>
             </div>
-            <span style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: '.85rem', color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '.05em' }}>SmartLean Production · 2026</span>
+            <span style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: '.85rem', color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '.05em' }}>Ariel Mella · SmartLean · 2026</span>
           </div>
           <p style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)' }}>
             Operational Excellence 4.0 → 5.0
           </p>
           <div style={{ display: 'flex', gap: '1.5rem' }}>
-            {['LinkedIn', 'GitHub', 'Email'].map(s => (
-              <a key={s} href={s === 'Email' ? 'mailto:ariel@smartlean.cl' : '#'} style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)', textDecoration: 'none', transition: 'color .2s' }}
+            <a href="https://www.linkedin.com/in/arielmella/" target="_blank" rel="noopener noreferrer" style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)', textDecoration: 'none', transition: 'color .2s' }}
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--em)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-3)')}
-              >{s}</a>
-            ))}
+              >LinkedIn</a>
+            <a href="https://github.com/Reinvik" target="_blank" rel="noopener noreferrer" style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)', textDecoration: 'none', transition: 'color .2s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--em)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-3)')}
+              >GitHub</a>
+            <a href="mailto:ariel@smartlean.cl" style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)', textDecoration: 'none', transition: 'color .2s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--em)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-3)')}
+              >Email</a>
           </div>
         </div>
       </footer>

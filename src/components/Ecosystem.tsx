@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
 const products = [
-  { name: 'Nexus Lean', tagline: 'Gestión Gemba & Mejora Continua', url: 'https://lean.smartlean.cl', accent: '#135aec', letter: 'L' },
-  { name: 'Nexus Garage', tagline: 'SOP Premium para Talleres', url: 'https://garage.smartlean.cl', accent: '#0ea5e9', letter: 'G' },
-  { name: 'Nexus Network', tagline: 'Ecosistema de Colaboración Industrial', url: 'https://network.smartlean.cl', accent: '#6366f1', letter: 'N' },
-  { name: 'Nexus Skills', tagline: 'Soberanía del Talento con IA', url: 'https://skills.smartlean.cl', accent: '#4f46e5', letter: 'S' },
+  { name: 'Nexus Lean', tagline: 'Gestión Gemba & Mejora Continua', url: 'https://lean.nexusnetwork.cl', accent: '#135aec', letter: 'L' },
+  { name: 'Nexus Garage', tagline: 'SOP Premium para Talleres', url: 'https://garage.nexusnetwork.cl', accent: '#0ea5e9', letter: 'G' },
+  { name: 'Nexus Network', tagline: 'Ecosistema de Colaboración Industrial', url: 'https://nexusnetwork.cl', accent: '#6366f1', letter: 'N' },
+  { name: 'Nexus Skills', tagline: 'Soberanía del Talento con IA', url: 'https://skills.nexusnetwork.cl', accent: '#4f46e5', letter: 'S' },
 ];
 
 export const Ecosystem = () => (
