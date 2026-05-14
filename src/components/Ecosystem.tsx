@@ -2,10 +2,34 @@ import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
 const products = [
-  { name: 'Nexus Lean', tagline: 'Gestión Gemba & Mejora Continua', url: 'https://lean.nexusnetwork.cl', accent: '#135aec', letter: 'L' },
-  { name: 'Nexus Garage', tagline: 'SOP Premium para Talleres', url: 'https://garage.nexusnetwork.cl', accent: '#0ea5e9', letter: 'G' },
-  { name: 'Nexus Network', tagline: 'Ecosistema de Colaboración Industrial', url: 'https://nexusnetwork.cl', accent: '#6366f1', letter: 'N' },
-  { name: 'Nexus Skills', tagline: 'Soberanía del Talento con IA', url: 'https://skills.nexusnetwork.cl', accent: '#4f46e5', letter: 'S' },
+  { 
+    name: 'Nexus Lean', 
+    tagline: 'Gestión Gemba & Mejora Continua', 
+    url: 'https://lean.nexusnetwork.cl', 
+    accent: '#135aec', 
+    icon: '/assets/projects/lean-icon.svg' 
+  },
+  { 
+    name: 'Nexus Garage', 
+    tagline: 'SOP Premium para Talleres', 
+    url: 'https://garage.nexusnetwork.cl', 
+    accent: '#F58220', 
+    icon: '/assets/projects/garage-icon.png' 
+  },
+  { 
+    name: 'Nexus Network', 
+    tagline: 'Ecosistema de Colaboración Industrial', 
+    url: 'https://nexusnetwork.cl', 
+    accent: '#6366f1', 
+    icon: '/assets/projects/network-icon.png' 
+  },
+  { 
+    name: 'Nexus Skills', 
+    tagline: 'Soberanía del Talento con IA', 
+    url: 'https://skills.nexusnetwork.cl', 
+    accent: '#8b5cf6', 
+    icon: '/assets/projects/skills-icon.png' 
+  },
 ];
 
 export const Ecosystem = () => (
@@ -40,8 +64,8 @@ export const Ecosystem = () => (
           >
             <div style={{ position: 'absolute', top: 0, right: 0, width: 120, height: 120, background: `radial-gradient(circle at 100% 0%, ${p.accent}18, transparent 70%)`, borderRadius: '0 20px 0 0' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ width: 48, height: 48, borderRadius: '12px', background: `${p.accent}20`, color: p.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter', fontWeight: 900, fontSize: '1.25rem' }}>
-                {p.letter}
+              <div style={{ width: 48, height: 48, borderRadius: '12px', background: `${p.accent}10`, color: p.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '8px', border: `1px solid ${p.accent}30` }}>
+                <img src={p.icon} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               </div>
               <ExternalLink size={16} color="var(--text-3)" />
             </div>
