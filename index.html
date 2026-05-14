@@ -14,27 +14,22 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      // Service Worker registration
+      // Force unregister all Service Workers to fix persistent 404 issues
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js');
-        });
-      }
-
-      // Fail-safe: Detect broken asset loads and clear cache
-      window.addEventListener('error', (e) => {
-        if (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK') {
-          console.warn('Asset failed to load. Clearing SW and reloading...');
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then((registrations) => {
-              for (let registration of registrations) {
-                registration.unregister();
-              }
-              window.location.reload(true);
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for (let registration of registrations) {
+            registration.unregister().then(() => {
+              console.log('SW unregistered');
             });
           }
-        }
-      }, true);
+        });
+      }
+      // Also clear all caches
+      if ('caches' in window) {
+        caches.keys().then((names) => {
+          for (let name of names) caches.delete(name);
+        });
+      }
     </script>
   </body>
 </html>

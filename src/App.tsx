@@ -49,7 +49,7 @@ function App() {
             <img src="/logo-icon.png" alt="SmartLean Logo" style={{ width: 42, height: 42, objectFit: 'contain' }} />
             <div>
               <span style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: '1.1rem', letterSpacing: '-.04em', textTransform: 'uppercase', display: 'block', lineHeight: 1 }}>SmartLean</span>
-              <span style={{ fontSize: '.5rem', fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--text-3)', display: 'block' }}>Operational Excellence 5.0</span>
+              <span style={{ fontSize: '.5rem', fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--text-3)', display: 'block' }}>Operational Excellence 5.0 → Nexus</span>
             </div>
           </a>
 
