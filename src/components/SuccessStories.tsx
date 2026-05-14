@@ -37,7 +37,7 @@ Repuestos que no se cobran, mano de obra que se "regala", clientes que no vuelve
       'Cobros sin fugas por mano de obra',
       'Fidelización automatizada post-servicio',
     ],
-    cta: { label: 'Descargar Whitepaper', href: '#' },
+    cta: { label: 'Conoce más sobre los resultados', href: 'https://garage.nexusnetwork.cl' },
   },
   // ← Próximos casos aquí
 ];
