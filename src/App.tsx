@@ -70,7 +70,7 @@ function App() {
           </a>
 
           {/* Desktop links */}
-          <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
+          <div className="nav-desktop" style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
             {NAV_LINKS.map(l => (
               <a key={l.href} href={l.href} style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-2)', textDecoration: 'none', transition: 'color .2s' }}
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--em)')}
@@ -79,7 +79,7 @@ function App() {
             ))}
           </div>
 
-          <a href="mailto:ariel@smartlean.cl" className="btn-primary" style={{ padding: '.65rem 1.5rem', fontSize: '.72rem' }}>
+          <a href="mailto:ariel@smartlean.cl" className="btn-primary desktop-only" style={{ padding: '.65rem 1.5rem', fontSize: '.72rem' }}>
             Contactar
           </a>
         </div>
@@ -102,7 +102,7 @@ function App() {
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
       <footer style={{ borderTop: '1px solid var(--border)', padding: '3rem 0', marginTop: '4rem' }}>
-        <div className="container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '2rem' }}>
+        <div className="container mobile-stack" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
             <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--em-dim)', border: '1px solid var(--border-em)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontFamily: 'Inter', fontWeight: 900, color: 'var(--em)', fontSize: '1rem', lineHeight: 1 }}>S</span>

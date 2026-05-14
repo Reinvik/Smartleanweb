@@ -265,6 +265,29 @@ h1, h2, h3, h4 { font-family: 'Inter', sans-serif; font-weight: 900; letter-spac
 }
 
 /* ─── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
+  .nav-desktop { display: none !important; }
+}
+
 @media (max-width: 768px) {
-  .container { padding-inline: 1.25rem; }
+  .container { padding-inline: 1.5rem; }
+  
+  h1 { fontSize: 1.75rem !important; }
+  h2 { font-size: 2.2rem !important; }
+  
+  .stat-number { font-size: 3rem !important; }
+  
+  .desktop-only { display: none !important; }
+  .mobile-stack { flex-direction: column !important; align-items: flex-start !important; }
+  
+  .grid-responsive-2 { grid-template-columns: 1fr !important; }
+  .grid-responsive-3 { grid-template-columns: 1fr !important; }
+  
+  .section-padding { padding: 4rem 0 !important; }
+}
+
+@media (max-width: 480px) {
+  h2 { font-size: 1.8rem !important; }
+  .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
 }

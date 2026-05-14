@@ -329,7 +329,7 @@ export const Hero = () => (
     </div>
 
     <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: '4rem', alignItems: 'center' }}>
+      <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: '4rem', alignItems: 'center' }}>
 
         {/* LEFT */}
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .8 }}>

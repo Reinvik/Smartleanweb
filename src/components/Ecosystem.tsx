@@ -11,7 +11,7 @@ const products = [
 export const Ecosystem = () => (
   <section id="ecosistema" style={{ padding: '8rem 0' }}>
     <div className="container">
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '2rem', marginBottom: '4rem' }}>
+      <div className="mobile-stack" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '2rem', marginBottom: '4rem' }}>
         <div>
           <div className="badge" style={{ marginBottom: '1.5rem' }}>Suite Nexus</div>
           <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, lineHeight: 1.1 }}>
