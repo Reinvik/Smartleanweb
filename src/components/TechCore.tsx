@@ -190,6 +190,8 @@ export const TechCore = () => {
     return () => clearInterval(interval);
   }, []);
 
+  if (!active) return null;
+
   const ActiveIcon = active.icon;
 
   return (

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'smartlean-v1';
+const CACHE_NAME = 'smartlean-v2';
 const ASSETS = [
   '/',
   '/index.html',
