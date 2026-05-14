@@ -2,11 +2,11 @@ import { motion } from 'framer-motion';
 import { Target, Cpu, BarChart3, Users2, TrendingUp } from 'lucide-react';
 
 const pillars = [
-  { n: '01', title: 'Lean: Flujo Físico', desc: 'Eliminación de desperdicios en el Gemba. Identificamos cada cuello de botella en el flujo real de tu operación antes de automatizar.', icon: Target, color: '#00e5a0' },
-  { n: '02', title: 'IA & Automatización', desc: 'Agentes de inteligencia artificial conectados a tu base de datos que guían la gestión, generan informes y ejecutan procesos en modo desatendido.', icon: Cpu, color: '#38bdf8' },
-  { n: '03', title: 'Visibilidad Predictiva', desc: 'Un dashboard de datos en tiempo real reemplaza las suposiciones. La certeza operativa no es un lujo, es el nuevo estándar.', icon: BarChart3, color: '#a78bfa' },
-  { n: '04', title: 'Soberanía del Talento', desc: 'Nexus Skills mapea las competencias de tu equipo y adapta el entrenamiento al nuevo estándar digital instalado.', icon: Users2, color: '#fb923c' },
-  { n: '05', title: 'Círculo de Crecimiento', desc: 'Marketing automatizado que nutre constantemente la demanda hacia la nueva capacidad operativa que instalamos.', icon: TrendingUp, color: '#f472b6' },
+  { n: '01', title: 'Lean: Flujo Físico', desc: 'Eliminación de desperdicios en el Gemba. Identificamos cada cuello de botella en el flujo real de tu operación antes de automatizar.', icon: Target, color: '#135aec' },
+  { n: '02', title: 'IA & Automatización', desc: 'Agentes de inteligencia artificial conectados a tu base de datos que guían la gestión, generan informes y ejecutan procesos en modo desatendido.', icon: Cpu, color: '#0ea5e9' },
+  { n: '03', title: 'Visibilidad Predictiva', desc: 'Un dashboard de datos en tiempo real reemplaza las suposiciones. La certeza operativa no es un lujo, es el nuevo estándar.', icon: BarChart3, color: '#6366f1' },
+  { n: '04', title: 'Soberanía del Talento', desc: 'Nexus Skills mapea las competencias de tu equipo y adapta el entrenamiento al nuevo estándar digital instalado.', icon: Users2, color: '#4f46e5' },
+  { n: '05', title: 'Círculo de Crecimiento', desc: 'Marketing automatizado que nutre constantemente la demanda hacia la nueva capacidad operativa que instalamos.', icon: TrendingUp, color: '#2563eb' },
 ];
 
 export const Pillars = () => (
@@ -27,7 +27,7 @@ export const Pillars = () => (
         {pillars.map((p, i) => (
           <motion.div
             key={i}
-            className="card"
+            className="bento-card"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -38,7 +38,7 @@ export const Pillars = () => (
               <div style={{ padding: '1rem', borderRadius: '14px', background: `${p.color}15`, color: p.color }}>
                 <p.icon size={26} />
               </div>
-              <span style={{ fontFamily: 'Syne', fontSize: '.75rem', fontWeight: 800, color: 'var(--text-3)', letterSpacing: '.1em' }}>{p.n}</span>
+              <span style={{ fontFamily: 'Inter', fontSize: '.75rem', fontWeight: 900, color: 'var(--text-3)', letterSpacing: '.1em' }}>{p.n}</span>
             </div>
             <div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '.75rem', color: 'var(--text-1)' }}>{p.title}</h3>

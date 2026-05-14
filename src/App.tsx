@@ -1,7 +1,7 @@
 import './index.css';
 import { Hero } from './components/Hero';
 import { Pillars } from './components/Pillars';
-import { AICapabilities } from './components/AICapabilities';
+import { TechCore } from './components/TechCore';
 import { DoubleMotor } from './components/DoubleMotor';
 import { SuccessStories } from './components/SuccessStories';
 import { Ecosystem } from './components/Ecosystem';
@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 
 const NAV_LINKS = [
   { label: 'Metodología', href: '#metodologia' },
-  { label: 'IA', href: '#ia' },
+  { label: 'Tecnología', href: '#tecnologia' },
   { label: 'Servicios', href: '#servicios' },
   { label: 'Casos', href: '#casos' },
   { label: 'Ecosistema', href: '#ecosistema' },
@@ -30,7 +30,7 @@ function App() {
     padding: '1.25rem 2rem',
     transition: 'all .35s',
     ...(scrolled ? {
-      background: 'rgba(5,8,16,.85)',
+      background: 'rgba(10,15,28,.85)',
       backdropFilter: 'blur(20px)',
       borderBottom: '1px solid rgba(255,255,255,.06)',
       padding: '.85rem 2rem',
@@ -49,7 +49,7 @@ function App() {
             <svg width="32" height="32" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="nlg" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#00e5a0"/>
+                  <stop offset="0%" stopColor="#135aec"/>
                   <stop offset="100%" stopColor="#0ea5e9"/>
                 </linearGradient>
               </defs>
@@ -64,8 +64,8 @@ function App() {
               <line x1="20" y1="36" x2="10" y2="28" stroke="url(#nlg)" strokeWidth="1.5" opacity="0.5"/>
             </svg>
             <div>
-              <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-.02em', textTransform: 'uppercase', display: 'block', lineHeight: 1 }}>SmartLean</span>
-              <span style={{ fontSize: '.5rem', fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--text-3)', display: 'block' }}>Data & AI Consultancy</span>
+              <span style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: '1.1rem', letterSpacing: '-.04em', textTransform: 'uppercase', display: 'block', lineHeight: 1 }}>SmartLean</span>
+              <span style={{ fontSize: '.5rem', fontWeight: 700, letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--text-3)', display: 'block' }}>Operational Excellence 5.0</span>
             </div>
           </a>
 
@@ -91,7 +91,7 @@ function App() {
         <div className="divider" />
         <Pillars />
         <div className="divider" />
-        <AICapabilities />
+        <TechCore />
         <div className="divider" />
         <DoubleMotor />
         <div className="divider" />
@@ -105,9 +105,9 @@ function App() {
         <div className="container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
             <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--em-dim)', border: '1px solid var(--border-em)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontFamily: 'Syne', fontWeight: 800, color: 'var(--em)', fontSize: '1rem', lineHeight: 1 }}>S</span>
+              <span style={{ fontFamily: 'Inter', fontWeight: 900, color: 'var(--em)', fontSize: '1rem', lineHeight: 1 }}>S</span>
             </div>
-            <span style={{ fontFamily: 'Syne', fontWeight: 700, fontSize: '.85rem', color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '.05em' }}>SmartLean Chile · 2026</span>
+            <span style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: '.85rem', color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '.05em' }}>SmartLean Production · 2026</span>
           </div>
           <p style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)' }}>
             Operational Excellence 4.0 → 5.0

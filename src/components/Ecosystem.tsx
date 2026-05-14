@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
 const products = [
-  { name: 'Nexus Lean', tagline: 'Gestión Gemba & Mejora Continua', url: 'https://lean.smartlean.cl', accent: '#00e5a0', letter: 'L' },
-  { name: 'Nexus Garage', tagline: 'SOP Premium para Talleres', url: 'https://garage.smartlean.cl', accent: '#fb923c', letter: 'G' },
-  { name: 'Nexus Network', tagline: 'Ecosistema de Colaboración Industrial', url: 'https://network.smartlean.cl', accent: '#38bdf8', letter: 'N' },
-  { name: 'Nexus Skills', tagline: 'Soberanía del Talento con IA', url: 'https://skills.smartlean.cl', accent: '#a78bfa', letter: 'S' },
+  { name: 'Nexus Lean', tagline: 'Gestión Gemba & Mejora Continua', url: 'https://lean.smartlean.cl', accent: '#135aec', letter: 'L' },
+  { name: 'Nexus Garage', tagline: 'SOP Premium para Talleres', url: 'https://garage.smartlean.cl', accent: '#0ea5e9', letter: 'G' },
+  { name: 'Nexus Network', tagline: 'Ecosistema de Colaboración Industrial', url: 'https://network.smartlean.cl', accent: '#6366f1', letter: 'N' },
+  { name: 'Nexus Skills', tagline: 'Soberanía del Talento con IA', url: 'https://skills.smartlean.cl', accent: '#4f46e5', letter: 'S' },
 ];
 
 export const Ecosystem = () => (
@@ -31,7 +31,7 @@ export const Ecosystem = () => (
             href={p.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="card"
+            className="bento-card"
             initial={{ opacity: 0, scale: .96 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -40,7 +40,7 @@ export const Ecosystem = () => (
           >
             <div style={{ position: 'absolute', top: 0, right: 0, width: 120, height: 120, background: `radial-gradient(circle at 100% 0%, ${p.accent}18, transparent 70%)`, borderRadius: '0 20px 0 0' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ width: 48, height: 48, borderRadius: '12px', background: `${p.accent}20`, color: p.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Syne', fontWeight: 800, fontSize: '1.25rem' }}>
+              <div style={{ width: 48, height: 48, borderRadius: '12px', background: `${p.accent}20`, color: p.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter', fontWeight: 900, fontSize: '1.25rem' }}>
                 {p.letter}
               </div>
               <ExternalLink size={16} color="var(--text-3)" />

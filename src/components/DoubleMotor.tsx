@@ -16,7 +16,7 @@ export const DoubleMotor = () => (
         {[
           {
             icon: Briefcase,
-            color: '#00e5a0',
+            color: '#135aec',
             tag: 'Motor 1',
             title: 'Consultoría Estratégica',
             body: 'Diagnóstico inicial profundo, diseño del nuevo flujo operativo y acompañamiento durante el "cambio de chip" organizacional. Ticket alto, transformación real.',
@@ -25,7 +25,7 @@ export const DoubleMotor = () => (
           },
           {
             icon: Repeat,
-            color: '#38bdf8',
+            color: '#0ea5e9',
             tag: 'Motor 2',
             title: 'SaaS: Sistema Operativo Permanente',
             body: 'Una vez que la consultoría termina, el ecosistema Nexus queda instalado como el sistema operativo del cliente, generando una renta mensual de por vida.',
@@ -34,7 +34,7 @@ export const DoubleMotor = () => (
           },
           {
             icon: Code2,
-            color: '#a78bfa',
+            color: '#6366f1',
             tag: 'Motor 3',
             title: 'Desarrollo a Medida',
             body: 'Aplicaciones construidas con filosofía SmartLean: flujo simple, automatización nativa, cloud-first y data-driven. Sin desperdicios, ni en el código ni en el proceso.',
@@ -44,7 +44,7 @@ export const DoubleMotor = () => (
         ].map((m, i) => (
           <motion.div
             key={i}
-            className="card"
+            className="bento-card"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -62,7 +62,7 @@ export const DoubleMotor = () => (
               <p style={{ color: 'var(--text-2)', lineHeight: 1.7, fontSize: '.95rem' }}>{m.body}</p>
             </div>
             <div style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: m.color, fontFamily: 'Syne' }}>{m.kpi}</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 900, color: m.color, fontFamily: 'Inter', textTransform: 'uppercase' }}>{m.kpi}</div>
               <div style={{ fontSize: '.7rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-3)', marginTop: '.3rem' }}>{m.kpiLabel}</div>
             </div>
           </motion.div>
