@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Sparkles, Bot, User, Loader2, MessageCircle, Zap } from 'lucide-react';
+import { X, Send, Bot, Loader2, MessageCircle, Zap } from 'lucide-react';
 
 const GEMINI_KEY = 'AIzaSyAxCdAq1xl58O7MZ4reX4AJo9lLjXxMzCM';
 
