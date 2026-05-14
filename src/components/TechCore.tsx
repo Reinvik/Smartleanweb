@@ -55,14 +55,19 @@ const techData = [
 ];
 
 /* ── ANIMATED DOT GRID ───────────────────────── */
-const DotGrid = ({ color = '#38bdf8' }: { color?: string }) => (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '10px', opacity: 0.35 }}>
+const DotGrid = ({ color }: { color: string }) => (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '12px', opacity: 0.4 }}>
     {Array.from({ length: 36 }).map((_, i) => (
-      <motion.div
+      <div
         key={i}
-        style={{ width: 3, height: 3, borderRadius: '50%', background: color }}
-        animate={{ opacity: [0.15, 0.9, 0.15], scale: [1, 1.6, 1] }}
-        transition={{ duration: 2.5, repeat: Infinity, delay: (i % 6 + Math.floor(i / 6)) * 0.15, ease: 'easeInOut' }}
+        className="pulse-dot"
+        style={{ 
+          width: 2, 
+          height: 2, 
+          borderRadius: '50%', 
+          background: color,
+          animationDelay: `${(i % 6 + Math.floor(i / 6)) * 0.15}s`
+        }}
       />
     ))}
   </div>
