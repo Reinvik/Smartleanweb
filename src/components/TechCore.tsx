@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Cloud, Bot, Factory, ArrowRight, Zap } from 'lucide-react';
 
 /* ── DATA ─────────────────────────────────────── */

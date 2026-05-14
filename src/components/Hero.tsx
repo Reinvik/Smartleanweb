@@ -1,5 +1,5 @@
-import { motion, useAnimation } from 'framer-motion';
-import { ArrowRight, ChevronRight, Network, Cpu, BarChart3, Bot, Brain, Cloud, CheckCircle2, Clock, Zap, TrendingUp, Activity } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, ChevronRight, Network, Cpu, BarChart3, Bot, Brain, Cloud, CheckCircle2, Zap, TrendingUp, Activity } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const stats = [

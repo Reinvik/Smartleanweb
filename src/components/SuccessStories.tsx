@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen, CheckCircle2, TrendingUp, Quote, ArrowRight,
-  Clock, Tag, ChevronRight, X, Zap, BarChart3,
+  Clock, ChevronRight, X, Zap, BarChart3,
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────────

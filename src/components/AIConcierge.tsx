@@ -97,6 +97,10 @@ export const AIConcierge = () => {
     setMsgs(newMsgs);
     setLoading(true);
     try {
+      const chatHistory = msgs
+        .slice(1)
+        .map(m => ({ role: m.role, parts: [{ text: m.text }] }));
+
       const res = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
         {
@@ -105,7 +109,7 @@ export const AIConcierge = () => {
           body: JSON.stringify({
             systemInstruction: { parts: [{ text: SYSTEM }] },
             contents: [
-              ...history,
+              ...chatHistory,
               { role: 'user', parts: [{ text: msg }] }
             ]
           })
@@ -395,13 +399,6 @@ export const AIConcierge = () => {
               <div style={{ textAlign: 'center', marginTop: '.6rem' }}>
                 <span style={{ fontSize: '.52rem', fontWeight: 600, letterSpacing: '.08em', color: 'rgba(255,255,255,0.18)', textTransform: 'uppercase' }}>
                   Powered by SmartLean IA · Gemini 2.0 Flash
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-IA · Gemini 2.0
                 </span>
               </div>
             </div>
