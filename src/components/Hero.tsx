@@ -10,23 +10,7 @@ const stats = [
 
 /* ── LOGO ────────────────────────────────────── */
 const Logo = () => (
-  <svg width="52" height="52" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="lg" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#135aec"/>
-        <stop offset="100%" stopColor="#0ea5e9"/>
-      </linearGradient>
-    </defs>
-    <path d="M4 44 Q14 10 28 18 Q42 26 52 8" stroke="url(#lg)" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-    {([[28,18],[42,26],[52,8],[36,32],[20,36],[10,28]] as [number,number][]).map(([cx,cy],i)=>(
-      <circle key={i} cx={cx} cy={cy} r="3.5" fill="url(#lg)" opacity={0.9}/>
-    ))}
-    <line x1="28" y1="18" x2="42" y2="26" stroke="url(#lg)" strokeWidth="1.5" opacity="0.5"/>
-    <line x1="42" y1="26" x2="52" y2="8" stroke="url(#lg)" strokeWidth="1.5" opacity="0.5"/>
-    <line x1="28" y1="18" x2="36" y2="32" stroke="url(#lg)" strokeWidth="1.5" opacity="0.5"/>
-    <line x1="36" y1="32" x2="20" y2="36" stroke="url(#lg)" strokeWidth="1.5" opacity="0.5"/>
-    <line x1="20" y1="36" x2="10" y2="28" stroke="url(#lg)" strokeWidth="1.5" opacity="0.5"/>
-  </svg>
+  <img src="/logo-icon.png" alt="SmartLean Logo" style={{ width: 56, height: 56, objectFit: 'contain' }} />
 );
 
 /* ── SPARKLINE ───────────────────────────────── */
