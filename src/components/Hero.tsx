@@ -14,18 +14,21 @@ const Logo = () => (
 );
 
 /* ── SPARKLINE ───────────────────────────────── */
-const Sparkline = ({ color, points }: { color: string; points: string }) => (
-  <svg width="100%" height="36" viewBox="0 0 120 36" preserveAspectRatio="none">
-    <defs>
-      <linearGradient id={`spark-${color.replace('#','')}`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor={color} stopOpacity="0.3"/>
-        <stop offset="100%" stopColor={color} stopOpacity="0"/>
-      </linearGradient>
-    </defs>
-    <path d={`M ${points} L 120 36 L 0 36 Z`} fill={`url(#spark-${color.replace('#','')})`}/>
-    <path d={points} stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
+const Sparkline = ({ color, points }: { color: string; points: string }) => {
+  const pathData = points.startsWith('M') ? points : `M ${points}`;
+  return (
+    <svg width="100%" height="36" viewBox="0 0 120 36" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id={`spark-${color.replace('#','')}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.3"/>
+          <stop offset="100%" stopColor={color} stopOpacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d={`${pathData} L 120 36 L 0 36 Z`} fill={`url(#spark-${color.replace('#','')})`}/>
+      <path d={pathData} stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+};
 
 /* ── MINI ACTIVITY FEED ──────────────────────── */
 const activities = [
