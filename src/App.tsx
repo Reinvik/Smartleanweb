@@ -63,7 +63,7 @@ function App() {
             ))}
           </div>
 
-          <a href="mailto:ariel@smartlean.cl" className="btn-primary desktop-only" style={{ padding: '.65rem 1.5rem', fontSize: '.72rem' }}>
+          <a href="https://wa.me/56930057769" target="_blank" rel="noopener noreferrer" className="btn-primary desktop-only" style={{ padding: '.65rem 1.5rem', fontSize: '.72rem' }}>
             Contactar
           </a>
         </div>

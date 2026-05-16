@@ -341,7 +341,7 @@ export const Hero = () => (
           </p>
 
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '3.5rem' }}>
-            <a href="mailto:ariel@smartlean.cl" className="btn-primary" style={{ padding: '1rem 2.25rem' }}>
+            <a href="https://wa.me/56930057769" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '1rem 2.25rem' }}>
               Agenda tu Diagnóstico <ArrowRight size={16} />
             </a>
             <a href="#metodologia" className="btn-ghost" style={{ padding: '1rem 2.25rem' }}>
