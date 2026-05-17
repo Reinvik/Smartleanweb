@@ -8,10 +8,7 @@ const stats = [
   { value: '3+',   label: 'Módulos',      sub: 'Nexus activos hoy',      icon: Network,    color: '#8b5cf6' },
 ];
 
-/* ── LOGO ────────────────────────────────────── */
-const Logo = () => (
-  <img src="/logo-icon.png" alt="SmartLean Logo" style={{ width: 56, height: 56, objectFit: 'contain' }} />
-);
+
 
 /* ── SPARKLINE ───────────────────────────────── */
 const Sparkline = ({ color, points }: { color: string; points: string }) => {
