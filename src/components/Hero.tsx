@@ -337,7 +337,7 @@ export const Hero = () => (
           </h2>
 
           <p style={{ fontSize: '1.1rem', color: 'var(--text-2)', lineHeight: 1.65, marginBottom: '2.5rem', maxWidth: '520px' }}>
-            Como <strong style={{ color: 'var(--text-1)' }}>consultora Lean</strong> especializada, combinamos metodologías de optimización con <strong style={{ color: 'var(--text-1)' }}>software Lean</strong> a medida para eliminar desperdicios, ahorrar tiempo y maximizar la rentabilidad de tu operación.
+            Somos una <strong style={{ color: 'var(--text-1)' }}>consultora con herramientas Lean digitales a medida</strong>. Combinamos metodologías de optimización de procesos con tecnología avanzada para eliminar desperdicios, ahorrar tiempo y maximizar la rentabilidad de tu operación.
           </p>
 
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '3.5rem' }}>
