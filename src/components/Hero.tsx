@@ -320,13 +320,7 @@ export const Hero = () => (
 
         {/* LEFT */}
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-            <Logo />
-            <div>
-              <h1 style={{ fontFamily: 'Inter', fontWeight: 900, fontSize: '2rem', letterSpacing: '-.04em', lineHeight: 1, textTransform: 'uppercase' }}>SmartLean</h1>
-              <p style={{ fontSize: '.6rem', fontWeight: 700, letterSpacing: '.22em', textTransform: 'uppercase', color: 'var(--text-2)', marginTop: '.25rem' }}>Efficiency & Software Production</p>
-            </div>
-          </div>
+
 
           <div className="badge" style={{ marginBottom: '1.5rem', width: 'fit-content', background: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.3)' }}>Excelencia Operacional 5.0</div>
 
