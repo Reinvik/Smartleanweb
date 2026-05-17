@@ -193,7 +193,7 @@ export const TechCore = () => {
       });
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [active]);
 
   if (!active) return null;
 
