@@ -83,7 +83,17 @@ export const AIConcierge = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
+  const msgsRef = useRef(msgs);
+  const loadingRef = useRef(loading);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    msgsRef.current = msgs;
+  }, [msgs]);
+
+  useEffect(() => {
+    loadingRef.current = loading;
+  }, [loading]);
 
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -91,10 +101,10 @@ export const AIConcierge = () => {
 
   const send = async (text?: string) => {
     const msg = (text ?? input).trim();
-    if (!msg || loading) return;
+    if (!msg || loadingRef.current) return;
     setInput('');
     setShowSuggestions(false);
-    const newMsgs: Msg[] = [...msgs, { role: 'user', text: msg }];
+    const newMsgs: Msg[] = [...msgsRef.current, { role: 'user', text: msg }];
     setMsgs(newMsgs);
     setLoading(true);
     try {
@@ -124,6 +134,19 @@ export const AIConcierge = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleOpenConcierge = (e: any) => {
+      setOpen(true);
+      if (e.detail?.message) {
+        setTimeout(() => {
+          send(e.detail.message);
+        }, 100);
+      }
+    };
+    window.addEventListener('open-concierge', handleOpenConcierge);
+    return () => window.removeEventListener('open-concierge', handleOpenConcierge);
+  }, []);
 
   return (
     <>

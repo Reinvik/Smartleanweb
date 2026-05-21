@@ -183,9 +183,11 @@ const NodeCard = ({
 /* ── MAIN COMPONENT ────────────────────────────── */
 export const TechCore = () => {
   const [active, setActive] = useState(techData[0]);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
 
   // Auto-cycle through nodes
   useEffect(() => {
+    if (!isAutoPlay) return;
     const interval = setInterval(() => {
       setActive(prev => {
         const idx = techData.findIndex(t => t.id === prev.id);
@@ -193,7 +195,7 @@ export const TechCore = () => {
       });
     }, 4000);
     return () => clearInterval(interval);
-  }, [active]);
+  }, [active, isAutoPlay]);
 
   if (!active) return null;
 
@@ -314,11 +316,11 @@ export const TechCore = () => {
 
               {/* Row 1: IA — empty — Lean */}
               <div style={{ gridColumn: 1, gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
-                <NodeCard node={techData[0]} isActive={active.id === 'ia'} onClick={() => setActive(techData[0])} />
+                <NodeCard node={techData[0]} isActive={active.id === 'ia'} onClick={() => { setActive(techData[0]); setIsAutoPlay(false); }} />
               </div>
               <div style={{ gridColumn: 2, gridRow: 1 }} />
               <div style={{ gridColumn: 3, gridRow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
-                <NodeCard node={techData[1]} isActive={active.id === 'lean'} onClick={() => setActive(techData[1])} />
+                <NodeCard node={techData[1]} isActive={active.id === 'lean'} onClick={() => { setActive(techData[1]); setIsAutoPlay(false); }} />
               </div>
 
               {/* Row 2: empty — SMARTLEAN — empty */}
@@ -350,11 +352,11 @@ export const TechCore = () => {
 
               {/* Row 3: RPA — empty — Cloud */}
               <div style={{ gridColumn: 1, gridRow: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
-                <NodeCard node={techData[2]} isActive={active.id === 'rpa'} onClick={() => setActive(techData[2])} />
+                <NodeCard node={techData[2]} isActive={active.id === 'rpa'} onClick={() => { setActive(techData[2]); setIsAutoPlay(false); }} />
               </div>
               <div style={{ gridColumn: 2, gridRow: 3 }} />
               <div style={{ gridColumn: 3, gridRow: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
-                <NodeCard node={techData[3]} isActive={active.id === 'cloud'} onClick={() => setActive(techData[3])} />
+                <NodeCard node={techData[3]} isActive={active.id === 'cloud'} onClick={() => { setActive(techData[3]); setIsAutoPlay(false); }} />
               </div>
             </div>
           </motion.div>
@@ -468,6 +470,16 @@ export const TechCore = () => {
                 {/* CTA */}
                 <motion.button
                   whileHover={{ x: 4 }}
+                  onClick={() => {
+                    const messageMap: Record<string, string> = {
+                      ia: 'Cuéntame más sobre la IA agéntica en el ecosistema Nexus y cómo optimiza los repuestos.',
+                      lean: '¿Cómo funciona la consultoría Lean Gemba y la eliminación de desperdicios?',
+                      rpa: '¿Qué tipo de automatizaciones (RPA) puedo implementar en mi negocio?',
+                      cloud: 'Cuéntame sobre la infraestructura en la nube y la seguridad de los datos.',
+                    };
+                    const msg = messageMap[active.id] || `Cuéntame más sobre ${active.title}`;
+                    window.dispatchEvent(new CustomEvent('open-concierge', { detail: { message: msg } }));
+                  }}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '.6rem',
                     fontSize: '.7rem', fontWeight: 800, letterSpacing: '.15em',
@@ -487,7 +499,7 @@ export const TechCore = () => {
                   {techData.map(t => (
                     <motion.button
                       key={t.id}
-                      onClick={() => setActive(t)}
+                      onClick={() => { setActive(t); setIsAutoPlay(false); }}
                       whileHover={{ scale: 1.3 }}
                       style={{
                         width: t.id === active.id ? 20 : 6,
