@@ -48,29 +48,52 @@ SmartLean es una consultora de transformación operacional que combina la filoso
 - No tenemos precios fijos públicos — cada solución es a medida.
 - El modelo incluye una tarifa de implementación + suscripción mensual al software.
 - Para distribuidores: modelo de licenciamiento para su red de talleres.
-- Para agendar diagnóstico: ariel@smartlean.cl o WhatsApp disponible en el sitio.
+- Para agendar diagnóstico: WhatsApp +56930057769 o presiona el botón "Contactar" arriba en el menú.
 
 ## CASOS DE ÉXITO
 - **Talleres mecánicos chilenos:** +40% rentabilidad, eliminación de pérdida de repuestos, trazabilidad total de horas-hombre, cobros sin fugas, fidelización automatizada.
 - El caso "El Fin del Cuaderno" documenta cómo los talleres perdían dinero silenciosamente con el sistema manual y cómo SmartLean lo revirtió.
 
-## INSTRUCCIONES DE COMPORTAMIENTO
+## INSTRUCCIONES DE COMPORTAMIENTO — MUY IMPORTANTE
 - Sé conciso: máximo 3 párrafos por respuesta, salvo que te pidan detalles.
 - Usa emojis con moderación (1-2 por respuesta máximo).
 - Si preguntan por precio exacto, explica el modelo y ofrece el diagnóstico.
 - Si preguntan por algo fuera de SmartLean, redirige amablemente al ecosistema Nexus en nexusnetwork.cl.
 - Siempre termina con una pregunta o una propuesta de acción concreta.
-- Para agendar: ariel@smartlean.cl
+- **CAPTURA DE LEAD — OBLIGATORIO:** Después de 2-3 intercambios de mensajes, DEBES pedir el nombre y número de teléfono del usuario de forma natural y amigable. Por ejemplo: "Para que Ariel Mella pueda contactarte directamente con una propuesta a medida, ¿me puedes dejar tu nombre y número de WhatsApp?"
+- Si el usuario da su teléfono, agradécele y dile que Ariel Mella le escribirá muy pronto. Luego puedes mencionarle que también puede presionar el botón "Contactar" en la parte superior de la página para escribirle directo por WhatsApp al +56930057769.
+- Si el usuario quiere contacto inmediato: dile que presione el botón **"Contactar"** en la parte superior del sitio, o que escriba directamente al WhatsApp **+56930057769**.
 
-## CONTEXTO DEL USUARIO ACTUAL
-- El usuario ha proporcionado su número de contacto: **+56930057769**.
-- El fundador es **Ariel Mella**. Si preguntan por contacto, ofrécele que Ariel Mella le escribirá pronto.`;
+## CONTEXTO
+- El fundador es **Ariel Mella**. WhatsApp directo: **+56930057769**.
+- El botón "Contactar" en la parte superior del sitio lleva directamente a WhatsApp con Ariel.`;
 
 const SUGGESTIONS = [
   '¿Qué es Nexus Garage?',
   '¿Cómo funciona la metodología Lean?',
   'Quiero agendar un diagnóstico',
 ];
+
+// Detect Chilean phone numbers in text
+const extractPhone = (text: string): string | null => {
+  const match = text.match(/(\+?56)?\s?9?\s?\d{4}\s?\d{4}/);
+  if (match) return match[0].replace(/\s/g, '');
+  return null;
+};
+
+// Extract name from conversation
+const extractName = (msgs: Msg[]): string => {
+  for (const m of msgs) {
+    if (m.role === 'user') {
+      // Look for short messages that are likely a name (1-3 words, no numbers)
+      const text = m.text.trim();
+      if (text.split(' ').length <= 3 && !/\d/.test(text) && text.length < 40) {
+        return text;
+      }
+    }
+  }
+  return 'Sin nombre';
+};
 
 type Msg = { role: 'user' | 'model'; text: string };
 
@@ -83,8 +106,10 @@ export const AIConcierge = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
+  const [leadSent, setLeadSent] = useState(false);
   const msgsRef = useRef(msgs);
   const loadingRef = useRef(loading);
+  const leadSentRef = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -127,7 +152,25 @@ export const AIConcierge = () => {
 
       const data = await response.json();
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Lo siento, tuve un problema al procesar tu solicitud. ¿Podrías intentar de nuevo?";
-      setMsgs([...newMsgs, { role: 'model', text: reply }]);
+      const finalMsgs = [...newMsgs, { role: 'model' as const, text: reply }];
+      setMsgs(finalMsgs);
+
+      // Detect phone number in user message and send lead if not already sent
+      const phone = extractPhone(msg);
+      if (phone && !leadSentRef.current) {
+        leadSentRef.current = true;
+        setLeadSent(true);
+        const name = extractName(newMsgs);
+        try {
+          await fetch('/api/lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, name, conversation: finalMsgs })
+          });
+        } catch (leadErr) {
+          console.error('Failed to send lead:', leadErr);
+        }
+      }
     } catch (err) {
       setMsgs([...newMsgs, { role: 'model', text: "Error de conexión con el núcleo Nexus. Por favor intenta más tarde." }]);
     } finally {
@@ -262,6 +305,34 @@ export const AIConcierge = () => {
                   </button>
                 ))}
               </div>
+            )}
+
+            {/* Lead captured confirmation */}
+            {leadSent && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  margin: '0 1rem 0.75rem',
+                  padding: '0.65rem 1rem',
+                  borderRadius: 12,
+                  background: 'rgba(34,197,94,0.08)',
+                  border: '1px solid rgba(34,197,94,0.3)',
+                  display: 'flex', alignItems: 'center', gap: '0.5rem',
+                  fontSize: '.72rem', color: '#22c55e', fontWeight: 700,
+                }}
+              >
+                <span>✅</span>
+                <span>¡Ariel Mella ya recibió tu contacto y te escribirá pronto!</span>
+                <a
+                  href="https://wa.me/56930057769"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ marginLeft: 'auto', color: '#22c55e', textDecoration: 'underline', whiteSpace: 'nowrap' }}
+                >
+                  Escribir ahora →
+                </a>
+              </motion.div>
             )}
 
             {/* Input */}
