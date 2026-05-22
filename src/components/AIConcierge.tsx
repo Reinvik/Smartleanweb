@@ -132,47 +132,63 @@ export const AIConcierge = () => {
     const newMsgs: Msg[] = [...msgsRef.current, { role: 'user', text: msg }];
     setMsgs(newMsgs);
     setLoading(true);
+
+    const GEMINI_KEY = 'AIzaSyAxCdAq1xl58O7MZ4reX4AJo9lLjXxMzCM';
+    const MODEL = 'gemini-2.0-flash';
+
     try {
-      const chatHistory = newMsgs.map(m => ({
+      // Build history excluding the initial greeting (first model message)
+      const history = newMsgs.slice(0, -1).map(m => ({
         role: m.role === 'user' ? 'user' : 'model',
         parts: [{ text: m.text }]
       }));
 
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            { role: 'user', parts: [{ text: SYSTEM }] },
-            { role: 'model', parts: [{ text: "Entendido. Soy el Concierge de SmartLean y estoy listo para asistir." }] },
-            ...chatHistory
-          ]
-        })
-      });
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: SYSTEM }] },
+            contents: [
+              ...history,
+              { role: 'user', parts: [{ text: msg }] }
+            ],
+            generationConfig: {
+              temperature: 0.75,
+              maxOutputTokens: 512,
+            }
+          })
+        }
+      );
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+      }
 
       const data = await response.json();
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Lo siento, tuve un problema al procesar tu solicitud. ¿Podrías intentar de nuevo?";
+      const reply =
+        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        'Lo siento, no pude generar una respuesta. Intenta de nuevo.';
+
       const finalMsgs = [...newMsgs, { role: 'model' as const, text: reply }];
       setMsgs(finalMsgs);
 
-      // Detect phone number in user message and send lead if not already sent
+      // Detectar teléfono y capturar lead
       const phone = extractPhone(msg);
       if (phone && !leadSentRef.current) {
         leadSentRef.current = true;
         setLeadSent(true);
         const name = extractName(newMsgs);
-        try {
-          await fetch('/api/lead', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone, name, conversation: finalMsgs })
-          });
-        } catch (leadErr) {
-          console.error('Failed to send lead:', leadErr);
-        }
+        // Log lead (no backend needed — just console for now)
+        console.info('[SmartLean Lead]', { name, phone, timestamp: new Date().toISOString() });
       }
-    } catch (err) {
-      setMsgs([...newMsgs, { role: 'model', text: "Error de conexión con el núcleo Nexus. Por favor intenta más tarde." }]);
+    } catch (err: any) {
+      setMsgs([...newMsgs, {
+        role: 'model',
+        text: `⚠️ Error al conectar con la IA: ${err?.message ?? 'desconocido'}. Escríbenos directo al WhatsApp: +56930057769`
+      }]);
     } finally {
       setLoading(false);
     }
