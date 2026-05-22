@@ -236,7 +236,7 @@ export const AIConcierge = () => {
     setMsgs(newMsgs);
     setLoading(true);
 
-    const GEMINI_KEY = 'AIzaSyAxCdAq1xl58O7MZ4reX4AJo9lLjXxMzCM';
+    const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyBwpCd9VxCZrv8vHbJIece0_L8tFoOpYQg';
     const MODEL = 'gemini-2.0-flash';
 
     try {
