@@ -178,17 +178,18 @@ export const AIConcierge = () => {
     }
   };
 
+  // Escucha el evento disparado desde las tarjetas de pilares
   useEffect(() => {
-    const handleOpenConcierge = (e: any) => {
+    const handleOpenChat = (e: CustomEvent<{ message: string }>) => {
       setOpen(true);
+      setShowSuggestions(false);
       if (e.detail?.message) {
-        setTimeout(() => {
-          send(e.detail.message);
-        }, 100);
+        // Pequeño delay para que la animación de apertura se vea primero
+        setTimeout(() => send(e.detail.message), 350);
       }
     };
-    window.addEventListener('open-concierge', handleOpenConcierge);
-    return () => window.removeEventListener('open-concierge', handleOpenConcierge);
+    window.addEventListener('smartlean:open-chat', handleOpenChat as EventListener);
+    return () => window.removeEventListener('smartlean:open-chat', handleOpenChat as EventListener);
   }, []);
 
   return (

@@ -173,6 +173,15 @@ const PillarCard = ({ p, index }: { p: typeof pillars[0]; index: number }) => {
               </div>
 
               <button
+                onClick={() => {
+                  // Dispara evento global para abrir el chat con contexto del pilar
+                  window.dispatchEvent(new CustomEvent('smartlean:open-chat', {
+                    detail: {
+                      message: `Hola, me interesa el **Pilar ${p.n}: ${p.title}**. Me gustaría solicitar un diagnóstico enfocado en este área. ¿Cómo funciona el proceso?`
+                    }
+                  }));
+                  setExpanded(false); // Cierra el modal
+                }}
                 style={{ marginTop: '2rem', width: '100%', padding: '1rem', background: p.color, color: '#020a14', fontWeight: 800, fontSize: '.8rem', letterSpacing: '.08em', textTransform: 'uppercase', border: 'none', borderRadius: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem' }}
               >
                 Solicitar Diagnóstico en este Pilar <ArrowRight size={16} />
