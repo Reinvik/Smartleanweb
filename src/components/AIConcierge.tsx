@@ -95,6 +95,109 @@ const extractName = (msgs: Msg[]): string => {
   return 'Sin nombre';
 };
 
+const renderMessageContent = (text: string, role: 'user' | 'model') => {
+  if (!text) return null;
+
+  const lines = text.split('\n');
+
+  return lines.map((line, lineIndex) => {
+    // Check if it's a list item
+    const isBulletList = line.trim().startsWith('* ') || line.trim().startsWith('- ');
+    const isNumberedList = /^\d+\.\s/.test(line.trim());
+    
+    // Check if it's a heading
+    const headingMatch = line.trim().match(/^(#{1,6})\s+(.*)$/);
+    const headingLevel = headingMatch ? headingMatch[1].length : 0;
+
+    let content = line;
+    if (headingMatch) {
+      content = headingMatch[2];
+    } else if (isBulletList) {
+      content = line.trim().substring(2);
+    } else if (isNumberedList) {
+      content = line.trim().replace(/^\d+\.\s/, '');
+    }
+
+    // Process bold (**text**) and italic (*text*)
+    const boldParts = content.split('**');
+    const processedContent = boldParts.flatMap((bPart, bIndex) => {
+      const isBold = bIndex % 2 === 1;
+      
+      const italicParts = bPart.split('*');
+      const subParts = italicParts.map((iPart, iIndex) => {
+        const isItalic = iIndex % 2 === 1;
+        if (isItalic) {
+          return <em key={`i-${iIndex}`} style={{ fontStyle: 'italic' }}>{iPart}</em>;
+        }
+        return iPart;
+      });
+
+      if (isBold) {
+        return (
+          <strong 
+            key={`b-${bIndex}`} 
+            style={{ 
+              fontWeight: 700, 
+              color: role === 'user' ? 'inherit' : 'white' 
+            }}
+          >
+            {subParts}
+          </strong>
+        );
+      }
+      return subParts;
+    });
+
+    if (headingLevel > 0) {
+      const fontSize = headingLevel === 1 ? '1.15rem' : headingLevel === 2 ? '1.05rem' : '0.95rem';
+      return (
+        <div 
+          key={lineIndex} 
+          style={{ 
+            fontWeight: 800, 
+            fontSize, 
+            marginTop: '0.75rem', 
+            marginBottom: '0.4rem', 
+            color: role === 'user' ? 'inherit' : 'white' 
+          }}
+        >
+          {processedContent}
+        </div>
+      );
+    }
+
+    if (isBulletList) {
+      return (
+        <div key={lineIndex} style={{ display: 'flex', gap: '0.4rem', marginLeft: '0.5rem', marginBottom: '0.25rem' }}>
+          <span style={{ color: role === 'user' ? 'inherit' : 'var(--em)' }}>•</span>
+          <span>{processedContent}</span>
+        </div>
+      );
+    }
+
+    if (isNumberedList) {
+      const match = line.trim().match(/^(\d+)\.\s/);
+      const num = match ? match[1] : (lineIndex + 1).toString();
+      return (
+        <div key={lineIndex} style={{ display: 'flex', gap: '0.4rem', marginLeft: '0.5rem', marginBottom: '0.25rem' }}>
+          <span style={{ fontWeight: 700, color: role === 'user' ? 'inherit' : 'var(--em)' }}>{num}.</span>
+          <span>{processedContent}</span>
+        </div>
+      );
+    }
+
+    if (line.trim() === '') {
+      return <div key={lineIndex} style={{ height: '0.4rem' }} />;
+    }
+
+    return (
+      <p key={lineIndex} style={{ margin: '0 0 0.4rem 0' }}>
+        {processedContent}
+      </p>
+    );
+  });
+};
+
 type Msg = { role: 'user' | 'model'; text: string };
 
 export const AIConcierge = () => {
@@ -276,7 +379,7 @@ export const AIConcierge = () => {
                     lineHeight: 1.5,
                     border: m.role === 'user' ? 'none' : '1px solid var(--border)'
                   }}>
-                    {m.text}
+                    {renderMessageContent(m.text, m.role)}
                   </div>
                 </div>
               ))}
