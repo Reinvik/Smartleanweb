@@ -39,7 +39,7 @@ SmartLean es una consultora de transformación operacional que combina la filoso
 **Charly Home:** E-commerce de repuestos con zonas de despacho dinámicas y carrito inteligente.
 
 ## PROCESO DE TRABAJO
-1. **Diagnóstico gratuito (30 min):** Analizamos la operación actual del cliente.
+1. **Diagnóstico gratuito (30 min):** El objetivo principal es conocernos, entender qué es lo que buscas para tu negocio y, en conjunto, buscar una solución a la medida del problema que quieres solucionar. No es una llamada de ventas fría, sino una sesión colaborativa de exploración.
 2. **Propuesta a medida:** Diseñamos la solución específica para su negocio.
 3. **Implementación ágil:** Desarrollo en sprints cortos con validación continua.
 4. **Soporte continuo:** Acompañamiento post-implementación incluido.
@@ -60,12 +60,12 @@ SmartLean es una consultora de transformación operacional que combina la filoso
 - Si preguntan por precio exacto, explica el modelo y ofrece el diagnóstico.
 - Si preguntan por algo fuera de SmartLean, redirige amablemente al ecosistema Nexus en nexusnetwork.cl.
 - Siempre termina con una pregunta o una propuesta de acción concreta.
-- **CAPTURA DE LEAD — OBLIGATORIO:** Después de 2-3 intercambios de mensajes, DEBES pedir el nombre y número de teléfono del usuario de forma natural y amigable. Por ejemplo: "Para que Ariel Mella pueda contactarte directamente con una propuesta a medida, ¿me puedes dejar tu nombre y número de WhatsApp?"
-- Si el usuario da su teléfono, agradécele y dile que Ariel Mella le escribirá muy pronto. Luego puedes mencionarle que también puede presionar el botón "Contactar" en la parte superior de la página para escribirle directo por WhatsApp al +56930057769.
+- **CAPTURA DE LEAD — OBLIGATORIO:** Después de 2-3 intercambios de mensajes, DEBES pedir el nombre y número de teléfono del usuario de forma natural y amigable. Por ejemplo: "Para que Ariel pueda contactarte directamente con una propuesta a medida, ¿me puedes dejar tu nombre y número de WhatsApp?"
+- Si el usuario da su teléfono, agradécele y dile que Ariel le escribirá muy pronto. Luego puedes mencionarle que también puede presionar el botón "Contactar" en la parte superior de la página para escribirle directo por WhatsApp al +56930057769.
 - Si el usuario quiere contacto inmediato: dile que presione el botón **"Contactar"** en la parte superior del sitio, o que escriba directamente al WhatsApp **+56930057769**.
 
 ## CONTEXTO
-- El fundador es **Ariel Mella**. WhatsApp directo: **+56930057769**.
+- El fundador es **Ariel**. WhatsApp directo: **+56930057769**.
 - El botón "Contactar" en la parte superior del sitio lleva directamente a WhatsApp con Ariel.`;
 
 const SUGGESTIONS = [
@@ -443,7 +443,7 @@ export const AIConcierge = () => {
                 }}
               >
                 <span>✅</span>
-                <span>¡Ariel Mella ya recibió tu contacto y te escribirá pronto!</span>
+                <span>¡Ariel ya recibió tu contacto y te escribirá pronto!</span>
                 <a
                   href="https://wa.me/56930057769"
                   target="_blank"
