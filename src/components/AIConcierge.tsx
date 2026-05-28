@@ -296,27 +296,70 @@ export const AIConcierge = () => {
         // Log lead local
         console.info('[SmartLean Lead]', { name, phone, timestamp: new Date().toISOString() });
         
-        // Enviar lead al backend
-        fetch('/api/lead', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phone,
-            name,
-            conversation: newMsgs.map(m => ({ role: m.role, text: m.text }))
+        const isDev = import.meta.env.DEV;
+        const localBotToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+        const localChatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+
+        if (isDev && localBotToken && localChatId) {
+          // En desarrollo, enviamos directo a la API de Telegram para evitar intermediarios locales sin configurar
+          const dateStr = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' });
+          const conversationText = newMsgs.slice(-10)
+            .map(m => `${m.role === 'user' ? '👤' : '🤖'} ${m.text.substring(0, 200)}`)
+            .join('\n\n');
+
+          const message = `🔔 *NUEVO LEAD LOCAL (Dev) — SmartLean*
+
+📋 *Datos del contacto:*
+• *Nombre:* ${name || 'No proporcionado'}
+• *Teléfono:* ${phone}
+• *Fecha:* ${dateStr}
+
+📱 [Abrir WhatsApp](https://wa.me/56${phone.replace(/\D/g, '')})
+
+💬 *Resumen de la conversación:*
+${conversationText}
+
+---
+_Enviado localmente desde Nexus Concierge_`;
+
+          fetch(`https://api.telegram.org/bot${localBotToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: localChatId,
+              text: message,
+              parse_mode: 'Markdown',
+            })
           })
-        })
-        .then(async (res) => {
-          if (!res.ok) {
-            const errText = await res.text();
-            console.error('Error al registrar lead en backend:', errText);
-          } else {
-            console.log('Lead registrado con éxito en el backend.');
-          }
-        })
-        .catch(err => {
-          console.error('Error de red al enviar lead:', err);
-        });
+          .then(res => {
+            if (res.ok) console.log('Lead enviado directamente a Telegram (local dev).');
+            else console.error('Error al enviar directo a Telegram:', res.statusText);
+          })
+          .catch(err => console.error('Error de red al enviar directo a Telegram:', err));
+
+        } else {
+          // En producción, usamos la función serverless de Vercel
+          fetch('/api/lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              phone,
+              name,
+              conversation: newMsgs.map(m => ({ role: m.role, text: m.text }))
+            })
+          })
+          .then(async (res) => {
+            if (!res.ok) {
+              const errText = await res.text();
+              console.error('Error al registrar lead en backend:', errText);
+            } else {
+              console.log('Lead registrado con éxito en el backend.');
+            }
+          })
+          .catch(err => {
+            console.error('Error de red al enviar lead:', err);
+          });
+        }
       }
     } catch (err: any) {
       setMsgs([...newMsgs, {
@@ -340,6 +383,23 @@ export const AIConcierge = () => {
     };
     window.addEventListener('smartlean:open-chat', handleOpenChat as EventListener);
     return () => window.removeEventListener('smartlean:open-chat', handleOpenChat as EventListener);
+  }, []);
+
+  // Pre-load Ollama model on mount to avoid 12-second cold start delay
+  useEffect(() => {
+    const OLLAMA_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
+    const MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'llama3.2';
+    const isDev = import.meta.env.DEV;
+    const endpoint = isDev ? '/api/ollama/api/generate' : `${OLLAMA_URL}/api/generate`;
+
+    console.log(`Preloading Ollama model "${MODEL}" to warm up connection...`);
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: MODEL })
+    })
+    .then(() => console.log(`Ollama model "${MODEL}" warmed up and ready.`))
+    .catch(err => console.warn('Could not warm up Ollama model:', err));
   }, []);
 
   return (
