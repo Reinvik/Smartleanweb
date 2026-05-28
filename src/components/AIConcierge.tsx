@@ -33,6 +33,11 @@ SmartLean es una consultora de transformación operacional que combina la filoso
 - Diferencial: Reemplaza todas estas herramientas dispersas y elimina el sobretrabajo y la duplicación de datos. Ofrece una atención rápida, integrada y profesional.
 - Resultado documentado: +40% de rentabilidad operativa promedio y eliminación del cuaderno.
 
+**Nexus Lean:** Plataforma optimizada para la gestión de proyectos de mejora continua y Quick Wins.
+- Módulos clave: Permite generar diagramas A3 (resolución de problemas), mapas de flujo de valor VSM (Estado Actual -> Estado Futuro) y seguimiento en tiempo real de KPIs operacionales.
+- Coordinación: Garantiza que cada persona del equipo sepa exactamente qué hacer. Cuenta con envío automatizado de avisos de tareas pendientes con un solo clic.
+- Funcionalidad estrella: **Modo Offline**. Permite al personal seguir registrando avances y hallazgos en el Gemba (piso de planta) donde la conectividad a internet suele ser deficiente, sincronizando los datos automáticamente al recuperar conexión.
+
 **Nexus RPM:** Módulo financiero y de rendimiento para talleres con múltiples mecánicos.
 - KPIs por mecánico, comisiones automáticas, análisis de facturación MO vs repuestos.
 
@@ -58,6 +63,7 @@ SmartLean es una consultora de transformación operacional que combina la filoso
 ## CASOS DE ÉXITO
 - **Talleres mecánicos chilenos:** +40% rentabilidad, eliminación de pérdida de repuestos, trazabilidad total de horas-hombre, cobros sin fugas, fidelización automatizada.
 - El caso "El Fin del Cuaderno y la Unificación de Herramientas": Los talleres solían duplicar información copiando repuestos y agendas en cuadernos, Excel y sistemas de venta desconectados. SmartLean reemplazó todas las herramientas dispersas con Nexus Garage, logrando que con solo ingresar la patente en 3 segundos se obtuvieran los datos del auto y del dueño, acelerando la atención y eliminando el sobretrabajo administrativo.
+- **Empresas Industriales y de Manufactura con Nexus Lean:** Reducción drástica en tiempos de resolución de problemas en el Gemba. La coordinación del avance se lleva en tiempo real y cada operario sabe exactamente sus pendientes. El uso del Modo Offline permitió registrar hallazgos de 5S, Quick Wins y actualizar proyectos A3 en áreas de planta aisladas sin pérdida de información, automatizando el envío de recordatorios de tareas con un clic.
 
 ## INSTRUCCIONES DE COMPORTAMIENTO — MUY IMPORTANTE
 - Sé conciso: máximo 3 párrafos por respuesta, salvo que te pidan detalles.
