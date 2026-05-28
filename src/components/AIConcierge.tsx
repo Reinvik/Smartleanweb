@@ -27,10 +27,11 @@ SmartLean es una consultora de transformación operacional que combina la filoso
 ## EL ECOSISTEMA NEXUS (productos SmartLean)
 
 **Nexus Garage:** Software de gestión integral para talleres mecánicos.
-- Módulos: Kanban de órdenes de trabajo, inventario inteligente, CRM de clientes, facturación, métricas de mecánicos, historial de vehículos.
-- Incluye: automatización de recordatorios de mantención vía WhatsApp, captura de leads desde redes sociales, panel de rentabilidad por mecánico.
-- Diferencial: elimina el cuaderno físico. Todo digitalizado, en la nube, en tiempo real.
-- Resultado documentado: +40% rentabilidad operativa promedio post-implementación.
+- Módulos: Kanban de órdenes de trabajo, inventario de repuestos inteligente, CRM de clientes, facturación, comisiones de mecánicos, historial digitalizado de vehículos.
+- Funcionalidad estrella: **Consulta de Patente en 3 segundos**. Solo anotas la patente y el sistema autocompleta los datos del vehículo y el nombre del dueño al instante.
+- El Problema Común: Los talleres suelen usar múltiples herramientas desconectadas (el cuaderno, pizarras físicas para agendar, Excel para inventario, y software de venta separado). Esto genera una duplicidad de información enorme (pasar datos del cuaderno a la planilla o al software de venta) y lentitud operativa.
+- Diferencial: Reemplaza todas estas herramientas dispersas y elimina el sobretrabajo y la duplicación de datos. Ofrece una atención rápida, integrada y profesional.
+- Resultado documentado: +40% de rentabilidad operativa promedio y eliminación del cuaderno.
 
 **Nexus RPM:** Módulo financiero y de rendimiento para talleres con múltiples mecánicos.
 - KPIs por mecánico, comisiones automáticas, análisis de facturación MO vs repuestos.
@@ -56,7 +57,7 @@ SmartLean es una consultora de transformación operacional que combina la filoso
 
 ## CASOS DE ÉXITO
 - **Talleres mecánicos chilenos:** +40% rentabilidad, eliminación de pérdida de repuestos, trazabilidad total de horas-hombre, cobros sin fugas, fidelización automatizada.
-- El caso "El Fin del Cuaderno" documenta cómo los talleres perdían dinero silenciosamente con el sistema manual y cómo SmartLean lo revirtió.
+- El caso "El Fin del Cuaderno y la Unificación de Herramientas": Los talleres solían duplicar información copiando repuestos y agendas en cuadernos, Excel y sistemas de venta desconectados. SmartLean reemplazó todas las herramientas dispersas con Nexus Garage, logrando que con solo ingresar la patente en 3 segundos se obtuvieran los datos del auto y del dueño, acelerando la atención y eliminando el sobretrabajo administrativo.
 
 ## INSTRUCCIONES DE COMPORTAMIENTO — MUY IMPORTANTE
 - Sé conciso: máximo 3 párrafos por respuesta, salvo que te pidan detalles.
