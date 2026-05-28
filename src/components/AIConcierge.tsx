@@ -4,7 +4,11 @@ import { X, Send, Bot, Loader2, MessageCircle, Zap } from 'lucide-react';
 
 
 
-const SYSTEM = `Eres el Concierge IA de SmartLean, una consultora tecnológica chilena de élite. Respondes en español chileno, eres directo, cálido, experto y entusiasta. Nunca dices que no puedes responder — si no tienes información exacta, orientas y ofreces agendar un diagnóstico.
+const SYSTEM = `Eres el Concierge IA de SmartLean, una consultora tecnológica chilena de élite. Respondes en español chileno, eres directo, cálido, experto y entusiasta.
+
+⚠️ REGLA DE ORO (CRÍTICA): Si el usuario desea agendar un diagnóstico, obtener una propuesta, recibir información personalizada, o muestra interés en mejorar su negocio, tu prioridad absoluta es SOLICITARLE su nombre y número de WhatsApp en ese mismo instante. NO le entregues los datos de contacto de Ariel (+56930057769) ni le digas que use el botón "Contactar" hasta que él te haya entregado sus propios datos. Pídelos de forma natural y cálida (ej. "¡Excelente! Para que Ariel pueda contactarte y agendemos tu diagnóstico gratuito, ¿me dejas tu nombre y número de WhatsApp?").
+
+Nunca dices que no puedes responder — si no tienes información exacta, orientas y ofreces agendar un diagnóstico.
 
 ## SOBRE SMARTLEAN
 SmartLean es una consultora de transformación operacional que combina la filosofía Lean con tecnología de punta (IA, RPA, Cloud). Fundada en Chile, opera bajo el modelo "doble motor": consultoría estratégica + ecosistema de software propio llamado Nexus.
@@ -48,7 +52,7 @@ SmartLean es una consultora de transformación operacional que combina la filoso
 - No tenemos precios fijos públicos — cada solución es a medida.
 - El modelo incluye una tarifa de implementación + suscripción mensual al software.
 - Para distribuidores: modelo de licenciamiento para su red de talleres.
-- Para agendar diagnóstico: WhatsApp +56930057769 o presiona el botón "Contactar" arriba en el menú.
+- Para agendar diagnóstico: solicitar el contacto (nombre y WhatsApp) del usuario primero.
 
 ## CASOS DE ÉXITO
 - **Talleres mecánicos chilenos:** +40% rentabilidad, eliminación de pérdida de repuestos, trazabilidad total de horas-hombre, cobros sin fugas, fidelización automatizada.
@@ -60,7 +64,7 @@ SmartLean es una consultora de transformación operacional que combina la filoso
 - Si preguntan por precio exacto, explica el modelo y ofrece el diagnóstico.
 - Si preguntan por algo fuera de SmartLean, redirige amablemente al ecosistema Nexus en nexusnetwork.cl.
 - Siempre termina con una pregunta o una propuesta de acción concreta.
-- **CAPTURA DE LEAD — OBLIGATORIO:** Después de 2-3 intercambios de mensajes, DEBES pedir el nombre y número de teléfono del usuario de forma natural y amigable. Por ejemplo: "Para que Ariel pueda contactarte directamente con una propuesta a medida, ¿me puedes dejar tu nombre y número de WhatsApp?"
+- **CAPTURA DE LEAD OBLIGATORIA (¡CRÍTICO!):** Cuando el usuario muestre interés en agendar, mejorar su negocio o quiera más información, en lugar de decirle que escriba a WhatsApp o use el botón, **PÍDELE directamente en tu respuesta su nombre y número de WhatsApp** con una frase amigable (ej: 'Para que Ariel te contacte y agendemos tu diagnóstico gratuito, ¿me dejas tu nombre y número de WhatsApp?'). Esto es obligatorio y prioritario.
 - Si el usuario da su teléfono, agradécele y dile que Ariel le escribirá muy pronto. Luego puedes mencionarle que también puede presionar el botón "Contactar" en la parte superior de la página para escribirle directo por WhatsApp al +56930057769.
 - Si el usuario quiere contacto inmediato: dile que presione el botón **"Contactar"** en la parte superior del sitio, o que escriba directamente al WhatsApp **+56930057769**.
 
@@ -74,10 +78,13 @@ const SUGGESTIONS = [
   'Quiero agendar un diagnóstico',
 ];
 
-// Detect Chilean phone numbers in text
+// Detect Chilean phone numbers in text (e.g. +569XXXXXXXX, 569XXXXXXXX, 9XXXXXXXX, etc.)
 const extractPhone = (text: string): string | null => {
-  const match = text.match(/(\+?56)?\s?9?\s?\d{4}\s?\d{4}/);
-  if (match) return match[0].replace(/\s/g, '');
+  const cleaned = text.replace(/[-\s()]/g, '');
+  const match = cleaned.match(/(?:\+?56)?9\d{8}/);
+  if (match) {
+    return match[0].replace('+', '');
+  }
   return null;
 };
 
@@ -236,44 +243,45 @@ export const AIConcierge = () => {
     setMsgs(newMsgs);
     setLoading(true);
 
-    const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyBwpCd9VxCZrv8vHbJIece0_L8tFoOpYQg';
-    const MODEL = 'gemini-2.0-flash';
+    const OLLAMA_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
+    const MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'llama3.2';
+    const isDev = import.meta.env.DEV;
+    const endpoint = isDev ? '/api/ollama/api/chat' : `${OLLAMA_URL}/api/chat`;
 
     try {
-      // Build history excluding the initial greeting (first model message)
+      // Build history for Ollama (role: 'user' | 'assistant')
       const history = newMsgs.slice(0, -1).map(m => ({
-        role: m.role === 'user' ? 'user' : 'model',
-        parts: [{ text: m.text }]
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.text
       }));
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_KEY}`,
+        endpoint,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            systemInstruction: { parts: [{ text: SYSTEM }] },
-            contents: [
+            model: MODEL,
+            messages: [
+              { role: 'system', content: SYSTEM },
               ...history,
-              { role: 'user', parts: [{ text: msg }] }
+              { role: 'user', content: msg }
             ],
-            generationConfig: {
-              temperature: 0.75,
-              maxOutputTokens: 512,
+            stream: false,
+            options: {
+              temperature: 0.75
             }
           })
         }
       );
 
       if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData?.error || `HTTP ${response.status}`);
       }
 
       const data = await response.json();
-      const reply =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        'Lo siento, no pude generar una respuesta. Intenta de nuevo.';
+      const reply = data?.message?.content || 'Lo siento, no pude generar una respuesta. Intenta de nuevo.';
 
       const finalMsgs = [...newMsgs, { role: 'model' as const, text: reply }];
       setMsgs(finalMsgs);
@@ -284,13 +292,36 @@ export const AIConcierge = () => {
         leadSentRef.current = true;
         setLeadSent(true);
         const name = extractName(newMsgs);
-        // Log lead (no backend needed — just console for now)
+        
+        // Log lead local
         console.info('[SmartLean Lead]', { name, phone, timestamp: new Date().toISOString() });
+        
+        // Enviar lead al backend
+        fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone,
+            name,
+            conversation: newMsgs.map(m => ({ role: m.role, text: m.text }))
+          })
+        })
+        .then(async (res) => {
+          if (!res.ok) {
+            const errText = await res.text();
+            console.error('Error al registrar lead en backend:', errText);
+          } else {
+            console.log('Lead registrado con éxito en el backend.');
+          }
+        })
+        .catch(err => {
+          console.error('Error de red al enviar lead:', err);
+        });
       }
     } catch (err: any) {
       setMsgs([...newMsgs, {
         role: 'model',
-        text: `⚠️ Error al conectar con la IA: ${err?.message ?? 'desconocido'}. Escríbenos directo al WhatsApp: +56930057769`
+        text: `⚠️ Error al conectar con la IA (Ollama): ${err?.message ?? 'desconocido'}. Asegúrate de que Ollama está corriendo y el modelo "${MODEL}" está descargado. Escríbenos directo al WhatsApp: +56930057769`
       }]);
     } finally {
       setLoading(false);
@@ -351,7 +382,7 @@ export const AIConcierge = () => {
                 <div>
                   <h3 style={{ fontSize: '.9rem', margin: 0 }}>Nexus Concierge</h3>
                   <span style={{ fontSize: '.65rem', color: 'var(--text-2)', display: 'flex', alignItems: 'center', gap: '.3rem' }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> En línea · Gemini 2.0 Flash
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> En línea · Nexus IA (Ollama)
                   </span>
                 </div>
               </div>
