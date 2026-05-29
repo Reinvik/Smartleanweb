@@ -251,7 +251,7 @@ export const AIConcierge = () => {
     setLoading(true);
 
     const OLLAMA_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
-    const MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'llama3.2';
+    const MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'hermes3:8b';
     const isDev = import.meta.env.DEV;
     const endpoint = isDev ? '/api/ollama/api/chat' : `${OLLAMA_URL}/api/chat`;
 
@@ -369,9 +369,10 @@ _Enviado localmente desde Nexus Concierge_`;
         }
       }
     } catch (err: any) {
+      console.error('Error al conectar con Nexus IA:', err);
       setMsgs([...newMsgs, {
         role: 'model',
-        text: `⚠️ Error al conectar con la IA (Ollama): ${err?.message ?? 'desconocido'}. Asegúrate de que Ollama está corriendo y el modelo "${MODEL}" está descargado. Escríbenos directo al WhatsApp: +56930057769`
+        text: 'Nuestro agente IA se tomó un respiro, por favor contáctame al +56930057769.'
       }]);
     } finally {
       setLoading(false);
@@ -395,7 +396,7 @@ _Enviado localmente desde Nexus Concierge_`;
   // Pre-load Ollama model on mount to avoid 12-second cold start delay
   useEffect(() => {
     const OLLAMA_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
-    const MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'llama3.2';
+    const MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'hermes3:8b';
     const isDev = import.meta.env.DEV;
     const endpoint = isDev ? '/api/ollama/api/generate' : `${OLLAMA_URL}/api/generate`;
 
@@ -449,7 +450,7 @@ _Enviado localmente desde Nexus Concierge_`;
                 <div>
                   <h3 style={{ fontSize: '.9rem', margin: 0 }}>Nexus Concierge</h3>
                   <span style={{ fontSize: '.65rem', color: 'var(--text-2)', display: 'flex', alignItems: 'center', gap: '.3rem' }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> En línea · Nexus IA (Ollama)
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> En línea · Nexus IA
                   </span>
                 </div>
               </div>
