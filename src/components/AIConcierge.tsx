@@ -90,10 +90,14 @@ const SUGGESTIONS = [
 
 // Detect Chilean phone numbers in text (e.g. +569XXXXXXXX, 569XXXXXXXX, 9XXXXXXXX, etc.)
 const extractPhone = (text: string): string | null => {
-  const cleaned = text.replace(/[-\s()]/g, '');
-  const match = cleaned.match(/(?:\+?56)?9\d{8}/);
+  // Primero eliminamos todo lo que no sea número o el signo +
+  const cleaned = text.replace(/[^0-9+]/g, '');
+  // Buscamos un patrón de teléfono chileno (con o sin +56, con o sin 9, y 8 dígitos)
+  const match = cleaned.match(/(?:\+?56)?(9)?(\d{8})/);
   if (match) {
-    return match[0].replace('+', '');
+    // Devolvemos el número con 9 y los 8 dígitos, asegurando formato de 9 dígitos sin el +
+    const digits = match[2];
+    return `9${digits}`;
   }
   return null;
 };
