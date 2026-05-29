@@ -1,6 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Bot, Loader2, MessageCircle, Zap } from 'lucide-react';
+import { X, Send, Bot, Loader2, MessageCircle, Zap, User } from 'lucide-react';
+
+// Genera sessionId único por conversación
+const SESSION_ID = crypto.randomUUID();
 
 
 
@@ -212,7 +215,7 @@ const renderMessageContent = (text: string, role: 'user' | 'model') => {
   });
 };
 
-type Msg = { role: 'user' | 'model'; text: string };
+type Msg = { role: 'user' | 'model' | 'ariel'; text: string };
 
 export const AIConcierge = () => {
   const [open, setOpen] = useState(false);
@@ -224,10 +227,12 @@ export const AIConcierge = () => {
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [leadSent, setLeadSent] = useState(false);
+  const [arielOnline, setArielOnline] = useState(false);
   const msgsRef = useRef(msgs);
   const loadingRef = useRef(loading);
   const leadSentRef = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     msgsRef.current = msgs;
@@ -241,6 +246,34 @@ export const AIConcierge = () => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [msgs, open]);
 
+  // ── Polling de respuestas manuales de Ariel ──────────────────────────
+  const startPolling = useCallback(() => {
+    if (pollingRef.current) return; // Ya está corriendo
+    pollingRef.current = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/poll?sessionId=${SESSION_ID}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data?.reply) {
+          setArielOnline(true);
+          setMsgs(prev => [...prev, { role: 'ariel' as const, text: data.reply }]);
+        }
+      } catch {
+        // Silencioso
+      }
+    }, 3000);
+  }, []);
+
+  const stopPolling = useCallback(() => {
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+  }, []);
+
+  // Limpiar polling al desmontar
+  useEffect(() => () => stopPolling(), [stopPolling]);
+
   const send = async (text?: string) => {
     const msg = (text ?? input).trim();
     if (!msg || loadingRef.current) return;
@@ -250,126 +283,105 @@ export const AIConcierge = () => {
     setMsgs(newMsgs);
     setLoading(true);
 
-    const OLLAMA_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
     const MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'hermes3:8b';
-    const isDev = import.meta.env.DEV;
-    const endpoint = isDev ? '/api/ollama/api/chat' : `${OLLAMA_URL}/api/chat`;
 
-    try {
-      // Build history for Ollama (role: 'user' | 'assistant')
-      const history = newMsgs.slice(0, -1).map(m => ({
+    // Historial en formato OpenAI/Gemini (excluir mensajes de Ariel del historial de IA)
+    const history = newMsgs.slice(0, -1)
+      .filter(m => m.role !== 'ariel')
+      .map(m => ({
         role: m.role === 'user' ? 'user' : 'assistant',
         content: m.text
       }));
 
-      const response = await fetch(
-        endpoint,
-        {
+    const messages = [
+      ...history,
+      { role: 'user', content: msg }
+    ];
+
+    // ── Intentar Ollama local primero (dev, silencioso) ──
+    const tryOllama = async (): Promise<string | null> => {
+      try {
+        const res = await fetch('/api/ollama/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             model: MODEL,
-            messages: [
-              { role: 'system', content: SYSTEM },
-              ...history,
-              { role: 'user', content: msg }
-            ],
+            messages: [{ role: 'system', content: SYSTEM }, ...messages],
             stream: false,
-            options: {
-              temperature: 0.75
-            }
-          })
-        }
-      );
+            options: { temperature: 0.75 }
+          }),
+          signal: AbortSignal.timeout(8000)
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data?.message?.content || null;
+      } catch {
+        return null;
+      }
+    };
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData?.error || `HTTP ${response.status}`);
+    // ── Fallback: Gemini vía /api/chat (notifica Telegram + guarda en Supabase) ──
+    const tryGemini = async (): Promise<string> => {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages, system: SYSTEM, sessionId: SESSION_ID })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return data?.message?.content || 'Lo siento, intenta de nuevo.';
+    };
+
+    try {
+      let reply = await tryOllama();
+      const usedGemini = !reply;
+
+      if (usedGemini) {
+        console.info('[Nexus IA] Usando Gemini + notificando a Ariel en Telegram...');
+        reply = await tryGemini();
+        // Activar polling para capturar respuesta manual de Ariel
+        startPolling();
       }
 
-      const data = await response.json();
-      const reply = data?.message?.content || 'Lo siento, no pude generar una respuesta. Intenta de nuevo.';
-
-      const finalMsgs = [...newMsgs, { role: 'model' as const, text: reply }];
+      const finalMsgs = [...newMsgs, { role: 'model' as const, text: reply! }];
       setMsgs(finalMsgs);
 
-      // Detectar teléfono y capturar lead
+      // ── Captura de lead ──────────────────────────────────────────────
       const phone = extractPhone(msg);
       if (phone && !leadSentRef.current) {
         leadSentRef.current = true;
         setLeadSent(true);
         const name = extractName(newMsgs);
-        
-        // Log lead local
         console.info('[SmartLean Lead]', { name, phone, timestamp: new Date().toISOString() });
-        
+
         const isDev = import.meta.env.DEV;
         const localBotToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
         const localChatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
 
         if (isDev && localBotToken && localChatId) {
-          // En desarrollo, enviamos directo a la API de Telegram para evitar intermediarios locales sin configurar
           const dateStr = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' });
           const conversationText = newMsgs.slice(-10)
             .map(m => `${m.role === 'user' ? '👤' : '🤖'} ${m.text.substring(0, 200)}`)
             .join('\n\n');
-
-          const message = `🔔 *NUEVO LEAD LOCAL (Dev) — SmartLean*
-
-📋 *Datos del contacto:*
-• *Nombre:* ${name || 'No proporcionado'}
-• *Teléfono:* ${phone}
-• *Fecha:* ${dateStr}
-
-📱 [Abrir WhatsApp](https://wa.me/56${phone.replace(/\D/g, '')})
-
-💬 *Resumen de la conversación:*
-${conversationText}
-
----
-_Enviado localmente desde Nexus Concierge_`;
-
           fetch(`https://api.telegram.org/bot${localBotToken}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               chat_id: localChatId,
-              text: message,
-              parse_mode: 'Markdown',
+              text: `🔔 *NUEVO LEAD — SmartLean*\n\n• *Nombre:* ${name}\n• *Teléfono:* ${phone}\n• *Fecha:* ${dateStr}\n\n📱 [WhatsApp](https://wa.me/56${phone.replace(/\D/g, '')})\n\n${conversationText}`,
+              parse_mode: 'Markdown'
             })
-          })
-          .then(res => {
-            if (res.ok) console.log('Lead enviado directamente a Telegram (local dev).');
-            else console.error('Error al enviar directo a Telegram:', res.statusText);
-          })
-          .catch(err => console.error('Error de red al enviar directo a Telegram:', err));
-
+          }).catch(console.error);
         } else {
-          // En producción, usamos la función serverless de Vercel
           fetch('/api/lead', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              phone,
-              name,
-              conversation: newMsgs.map(m => ({ role: m.role, text: m.text }))
-            })
-          })
-          .then(async (res) => {
-            if (!res.ok) {
-              const errText = await res.text();
-              console.error('Error al registrar lead en backend:', errText);
-            } else {
-              console.log('Lead registrado con éxito en el backend.');
-            }
-          })
-          .catch(err => {
-            console.error('Error de red al enviar lead:', err);
-          });
+            body: JSON.stringify({ phone, name, conversation: newMsgs.map(m => ({ role: m.role, text: m.text })) })
+          }).catch(console.error);
         }
       }
     } catch (err: any) {
-      console.error('Error al conectar con Nexus IA:', err);
+      console.error('Error en Nexus IA:', err);
       setMsgs([...newMsgs, {
         role: 'model',
         text: 'Nuestro agente IA se tomó un respiro, por favor contáctame al +56930057769.'
@@ -444,13 +456,14 @@ _Enviado localmente desde Nexus Concierge_`;
             {/* Header */}
             <div style={{ padding: '1.5rem', background: 'rgba(19,90,236,0.1)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--em)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Bot color="white" size={24} />
+                <div style={{ width: 40, height: 40, borderRadius: 12, background: arielOnline ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'var(--em)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background .5s' }}>
+                  {arielOnline ? <User color="white" size={22} /> : <Bot color="white" size={24} />}
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '.9rem', margin: 0 }}>Nexus Concierge</h3>
+                  <h3 style={{ fontSize: '.9rem', margin: 0 }}>{arielOnline ? 'Ariel — SmartLean' : 'Nexus Concierge'}</h3>
                   <span style={{ fontSize: '.65rem', color: 'var(--text-2)', display: 'flex', alignItems: 'center', gap: '.3rem' }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> En línea · Nexus IA
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} />
+                    {arielOnline ? 'Ariel está respondiendo en vivo ✨' : 'En línea · Nexus IA'}
                   </span>
                 </div>
               </div>
@@ -463,22 +476,34 @@ _Enviado localmente desde Nexus Concierge_`;
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {msgs.map((m, i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', gap: '.8rem' }}>
-                  {m.role === 'model' && (
-                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(19,90,236,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Zap size={14} color="var(--em)" />
+                  {(m.role === 'model' || m.role === 'ariel') && (
+                    <div style={{
+                      width: 32, height: 32, borderRadius: 8,
+                      background: m.role === 'ariel' ? 'rgba(34,197,94,0.15)' : 'rgba(19,90,236,0.1)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                    }}>
+                      {m.role === 'ariel'
+                        ? <User size={14} color="#22c55e" />
+                        : <Zap size={14} color="var(--em)" />}
                     </div>
                   )}
-                  <div style={{
-                    maxWidth: '85%',
-                    padding: '1rem',
-                    borderRadius: m.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                    background: m.role === 'user' ? 'var(--em)' : 'rgba(255,255,255,0.03)',
-                    color: m.role === 'user' ? 'white' : 'var(--text-1)',
-                    fontSize: '.9rem',
-                    lineHeight: 1.5,
-                    border: m.role === 'user' ? 'none' : '1px solid var(--border)'
-                  }}>
-                    {renderMessageContent(m.text, m.role)}
+                  <div style={{ maxWidth: '85%' }}>
+                    {m.role === 'ariel' && (
+                      <div style={{ fontSize: '.6rem', fontWeight: 700, color: '#22c55e', marginBottom: '.25rem', letterSpacing: '.05em', textTransform: 'uppercase' }}>
+                        Ariel · En vivo
+                      </div>
+                    )}
+                    <div style={{
+                      padding: '1rem',
+                      borderRadius: m.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                      background: m.role === 'user' ? 'var(--em)' : m.role === 'ariel' ? 'rgba(34,197,94,0.06)' : 'rgba(255,255,255,0.03)',
+                      color: m.role === 'user' ? 'white' : 'var(--text-1)',
+                      fontSize: '.9rem',
+                      lineHeight: 1.5,
+                      border: m.role === 'user' ? 'none' : m.role === 'ariel' ? '1px solid rgba(34,197,94,0.3)' : '1px solid var(--border)'
+                    }}>
+                      {renderMessageContent(m.text, m.role === 'ariel' ? 'model' : m.role)}
+                    </div>
                   </div>
                 </div>
               ))}
