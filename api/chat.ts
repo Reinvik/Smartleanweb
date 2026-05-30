@@ -4,28 +4,34 @@ const SUPABASE_URL = process.env.SUPABASE_MAIN_URL || 'https://iuzpgljjfeobxlptm
 const SUPABASE_KEY = process.env.SUPABASE_MAIN_SERVICE_ROLE_KEY!;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID!;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY!;
 
-async function callGemini(messages: { role: string; content: string }[], system: string): Promise<string> {
-  const contents = messages.map(m => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }]
-  }));
+async function callOllama(messages: { role: string; content: string }[], system: string): Promise<string> {
+  const OLLAMA_URL = process.env.OLLAMA_URL;
+  if (!OLLAMA_URL) {
+    throw new Error('OLLAMA_URL environment variable is not configured');
+  }
+  const MODEL = process.env.VITE_OLLAMA_MODEL || 'hermes3:8b';
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: system }] },
-        contents,
-        generationConfig: { temperature: 0.75, maxOutputTokens: 512 }
-      })
-    }
-  );
+  const res = await fetch(`${OLLAMA_URL}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: [
+        { role: 'system', content: system },
+        ...messages.map(m => ({ role: m.role, content: m.content }))
+      ],
+      stream: false,
+      options: { temperature: 0.75 }
+    }),
+    signal: AbortSignal.timeout(12000) // 12 seconds timeout
+  });
+
+  if (!res.ok) {
+    throw new Error(`Ollama returned status ${res.status}`);
+  }
   const data = await res.json();
-  return data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Lo siento, intenta de nuevo.';
+  return data?.message?.content || '';
 }
 
 async function notifyTelegram(sessionId: string, userMsg: string, aiReply: string): Promise<number | null> {
@@ -71,9 +77,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const userMsg = messages[messages.length - 1]?.content || '';
+    let aiReply = '';
 
-    // 1. IA responde inmediatamente
-    const aiReply = await callGemini(messages, system);
+    try {
+      // 1. Intentar llamar al Ollama local de Ariel a través del túnel publico
+      aiReply = await callOllama(messages, system);
+    } catch (ollamaErr: any) {
+      console.warn('Ollama tunnel failed, falling back to live Telegram chat:', ollamaErr);
+      // Mensaje de contingencia si la PC está apagada o el túnel está inactivo
+      aiReply = '¡Hola! Nuestro asistente inteligente se tomó un breve descanso, pero ya le avisé a Ariel para que te responda en vivo por este chat. Quédate en línea, te contestará aquí mismo en unos momentos... ⚡';
+    }
 
     // 2. Notificar a Ariel en Telegram (en paralelo, no bloqueante)
     const telegramMsgId = await notifyTelegram(sessionId, userMsg, aiReply);
