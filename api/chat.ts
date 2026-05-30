@@ -14,7 +14,10 @@ async function callOllama(messages: { role: string; content: string }[], system:
 
   const res = await fetch(`${OLLAMA_URL}/api/chat`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'bypass-tunnel-reminder': 'true'
+    },
     body: JSON.stringify({
       model: MODEL,
       messages: [
