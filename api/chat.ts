@@ -10,7 +10,10 @@ async function callOllama(messages: { role: string; content: string }[], system:
   if (!OLLAMA_URL) {
     throw new Error('OLLAMA_URL environment variable is not configured');
   }
-  const MODEL = process.env.VITE_OLLAMA_MODEL || 'hermes3:8b';
+  const MODEL = process.env.VITE_OLLAMA_MODEL || 'gemma4:e4b';
+
+  // Optimización: Limitar el historial a los últimos 4 mensajes para reducir drásticamente el tiempo de procesamiento de Ollama.
+  const optimizedMessages = messages.slice(-4).map(m => ({ role: m.role, content: m.content }));
 
   const res = await fetch(`${OLLAMA_URL}/api/chat`, {
     method: 'POST',
@@ -22,12 +25,17 @@ async function callOllama(messages: { role: string; content: string }[], system:
       model: MODEL,
       messages: [
         { role: 'system', content: system },
-        ...messages.map(m => ({ role: m.role, content: m.content }))
+        ...optimizedMessages
       ],
       stream: false,
-      options: { temperature: 0.75 }
+      keep_alive: '60m', // Mantener cargado el modelo en GPU por 60 min para evitar retardos
+      options: { 
+        temperature: 0.7,
+        num_predict: 150, // Limitar tokens de respuesta para acelerar la generación
+        num_ctx: 2048     // Ventana de contexto compacta
+      }
     }),
-    signal: AbortSignal.timeout(12000) // 12 seconds timeout
+    signal: AbortSignal.timeout(9000) // Timeout de 9 segundos para responder antes del corte de Vercel (10s)
   });
 
   if (!res.ok) {
@@ -87,8 +95,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       aiReply = await callOllama(messages, system);
     } catch (ollamaErr: any) {
       console.warn('Ollama tunnel failed, falling back to live Telegram chat:', ollamaErr);
-      // Mensaje de contingencia si la PC está apagada o el túnel está inactivo
-      aiReply = '¡Hola! Nuestro asistente inteligente se tomó un breve descanso, pero ya le avisé a Ariel para que te responda en vivo por este chat. Quédate en línea, te contestará aquí mismo en unos momentos... ⚡';
+      // Depuración: Exponer el error exacto para diagnosticar
+      aiReply = 'Ollama Error: ' + (ollamaErr.message || ollamaErr) + ' | URL: ' + process.env.OLLAMA_URL + ' | MODEL: ' + (process.env.VITE_OLLAMA_MODEL || 'gemma4:e4b');
     }
 
     // 2. Notificar a Ariel en Telegram (en paralelo, no bloqueante)
