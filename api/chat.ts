@@ -10,7 +10,7 @@ async function callOllama(messages: { role: string; content: string }[], system:
   if (!OLLAMA_URL) {
     throw new Error('OLLAMA_URL environment variable is not configured');
   }
-  const MODEL = process.env.VITE_OLLAMA_MODEL || 'gemma4:e4b';
+  const MODEL = process.env.VITE_OLLAMA_MODEL || 'gemma2:2b';
 
   // Optimización: Limitar el historial a los últimos 4 mensajes para reducir drásticamente el tiempo de procesamiento de Ollama.
   const optimizedMessages = messages.slice(-4).map(m => ({ role: m.role, content: m.content }));
@@ -35,7 +35,7 @@ async function callOllama(messages: { role: string; content: string }[], system:
         num_ctx: 2048     // Ventana de contexto compacta
       }
     }),
-    signal: AbortSignal.timeout(9000) // Timeout de 9 segundos para responder antes del corte de Vercel (10s)
+    signal: AbortSignal.timeout(25000) // 25s — gemma2:2b responde en ~3-5s, margen generoso
   });
 
   if (!res.ok) {
