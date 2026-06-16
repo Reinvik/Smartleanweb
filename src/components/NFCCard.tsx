@@ -12,25 +12,45 @@ import {
   Globe
 } from 'lucide-react';
 
-export function NFCCard() {
+export interface NFCUser {
+  name: string;
+  role: string;
+  phone: string;
+  email: string;
+  avatarUrl?: string;
+  initials: string;
+}
+
+interface NFCCardProps {
+  user: NFCUser;
+}
+
+export function NFCCard({ user }: NFCCardProps) {
   const [copied, setCopied] = useState(false);
   const [playVideo, setPlayVideo] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
 
   const downloadVCard = () => {
     setDownloaded(true);
+    
+    // Separar el nombre en N: Apellido;Nombre
+    const nameParts = user.name.trim().split(/\s+/);
+    const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
+    const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : user.name;
+    const formattedN = `${lastName};${firstName};;;`;
+
     const vcard = [
       'BEGIN:VCARD',
       'VERSION:3.0',
-      'FN:Ariel Mella',
-      'N:Mella;Ariel;;;',
+      `FN:${user.name}`,
+      `N:${formattedN}`,
       'ORG:SmartLean',
-      'TITLE:Founder & CEO',
-      'TEL;TYPE=CELL,VOICE;VALUE=uri:tel:+56930057769',
-      'EMAIL;TYPE=PREF,INTERNET:ariel@smartlean.cl',
+      `TITLE:${user.role}`,
+      `TEL;TYPE=CELL,VOICE;VALUE=uri:tel:${user.phone.replace(/\s+/g, '')}`,
+      `EMAIL;TYPE=PREF,INTERNET:${user.email}`,
       'URL:https://smartlean.cl',
       'URL;TYPE=NexusGarage:https://nexusgarage.cl',
-      'NOTE:Contacto escaneado desde Tarjeta NFC de Ariel Mella.',
+      `NOTE:Contacto escaneado desde Tarjeta NFC de ${user.name}.`,
       'END:VCARD'
     ].join('\r\n');
 
@@ -38,7 +58,7 @@ export function NFCCard() {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'Ariel_Mella_SmartLean.vcf');
+    link.setAttribute('download', `${user.name.replace(/\s+/g, '_')}_SmartLean.vcf`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -48,16 +68,18 @@ export function NFCCard() {
   };
 
   const openWhatsApp = () => {
-    const message = encodeURIComponent('Hola Ariel, acabo de escanear tu tarjeta de presentación NFC. ¡Un gusto conectar contigo!');
-    window.open(`https://wa.me/56930057769?text=${message}`, '_blank');
+    const firstName = user.name.split(' ')[0];
+    const message = encodeURIComponent(`Hola ${firstName}, acabo de escanear tu tarjeta de presentación NFC. ¡Un gusto conectar contigo!`);
+    const cleanPhone = user.phone.replace(/[^0-9]/g, '');
+    window.open(`https://wa.me/${cleanPhone}?text=${message}`, '_blank');
   };
 
   const makeCall = () => {
-    window.open('tel:+56930057769', '_self');
+    window.open(`tel:${user.phone.replace(/\s+/g, '')}`, '_self');
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText('+56930057769');
+    navigator.clipboard.writeText(user.phone);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -99,11 +121,15 @@ export function NFCCard() {
             <div className="nfc-avatar-container">
               <div className="nfc-avatar-glow" />
               <div className="nfc-avatar-main">
-                <img 
-                  src="/ariel-avatar.png" 
-                  alt="Ariel Mella" 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                />
+                {user.avatarUrl ? (
+                  <img 
+                    src={user.avatarUrl} 
+                    alt={user.name} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  />
+                ) : (
+                  <span className="nfc-avatar-initials">{user.initials}</span>
+                )}
               </div>
               <motion.div 
                 className="nfc-avatar-badge"
@@ -114,8 +140,8 @@ export function NFCCard() {
               </motion.div>
             </div>
 
-            <h1 className="nfc-name">Ariel Mella</h1>
-            <p className="nfc-role">Founder & CEO @ SmartLean</p>
+            <h1 className="nfc-name">{user.name}</h1>
+            <p className="nfc-role">{user.role}</p>
             <div className="nfc-verified-badge">
               <Sparkles className="w-3.5 h-3.5 text-sky-400 animate-pulse" />
               <span>Contacto Verificado</span>
@@ -255,16 +281,16 @@ export function NFCCard() {
               <div className="nfc-info-icon"><Phone className="w-4 h-4 text-sky-400" /></div>
               <div className="nfc-info-content">
                 <span className="info-label">Teléfono / WhatsApp</span>
-                <span className="info-value">+56 9 3005 7769</span>
+                <span className="info-value">{user.phone}</span>
               </div>
               <span className="info-action-text">{copied ? '¡Copiado!' : 'Copiar'}</span>
             </div>
 
-            <div className="nfc-info-row" onClick={() => window.open('mailto:ariel@smartlean.cl', '_self')}>
+            <div className="nfc-info-row" onClick={() => window.open(`mailto:${user.email}`, '_self')}>
               <div className="nfc-info-icon"><Mail className="w-4 h-4 text-sky-400" /></div>
               <div className="nfc-info-content">
                 <span className="info-label">Correo Electrónico</span>
-                <span className="info-value">ariel@smartlean.cl</span>
+                <span className="info-value">{user.email}</span>
               </div>
               <span className="info-action-text">Enviar</span>
             </div>

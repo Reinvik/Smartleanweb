@@ -6,7 +6,7 @@
   },
   "rewrites": [
     {
-      "source": "/(linktarjeta|tarjeta|ariel)",
+      "source": "/(linktarjeta|tarjeta|ariel|ricardo)",
       "destination": "/index.html"
     }
   ]

@@ -8,6 +8,7 @@ import { Ecosystem } from './components/Ecosystem';
 import { AIConcierge } from './components/AIConcierge';
 import { useState, useEffect } from 'react';
 import { NFCCard } from './components/NFCCard';
+import type { NFCUser } from './components/NFCCard';
 
 const NAV_LINKS = [
   { label: 'Metodología', href: '#metodologia' },
@@ -19,19 +20,36 @@ const NAV_LINKS = [
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
-  const [isNfcRoute, setIsNfcRoute] = useState(false);
+  const [nfcUser, setNfcUser] = useState<NFCUser | null>(null);
 
   useEffect(() => {
-    const paths = ['/linktarjeta', '/tarjeta', '/ariel'];
-    setIsNfcRoute(paths.includes(window.location.pathname.toLowerCase()));
+    const pathname = window.location.pathname.toLowerCase();
+    if (['/linktarjeta', '/tarjeta', '/ariel'].includes(pathname)) {
+      setNfcUser({
+        name: 'Ariel Mella',
+        role: 'Founder & CEO @ SmartLean',
+        phone: '+56 9 3005 7769',
+        email: 'ariel@smartlean.cl',
+        avatarUrl: '/ariel-avatar.png',
+        initials: 'AM'
+      });
+    } else if (pathname === '/ricardo') {
+      setNfcUser({
+        name: 'Ricardo Faria',
+        role: 'Gestor de Proyectos y Nuevos Negocios',
+        phone: '+56 9 3143 4463',
+        email: 'ricardo@smartlean.cl',
+        initials: 'RF'
+      });
+    }
   }, []);
 
   useEffect(() => {
-    if (isNfcRoute) return;
+    if (nfcUser) return;
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
-  }, [isNfcRoute]);
+  }, [nfcUser]);
 
   const navStyle: React.CSSProperties = {
     position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
@@ -45,8 +63,8 @@ function App() {
     } : {})
   };
 
-  if (isNfcRoute) {
-    return <NFCCard />;
+  if (nfcUser) {
+    return <NFCCard user={nfcUser} />;
   }
 
   return (
