@@ -7,6 +7,7 @@ import { SuccessStories } from './components/SuccessStories';
 import { Ecosystem } from './components/Ecosystem';
 import { AIConcierge } from './components/AIConcierge';
 import { useState, useEffect } from 'react';
+import { NFCCard } from './components/NFCCard';
 
 const NAV_LINKS = [
   { label: 'Metodología', href: '#metodologia' },
@@ -18,12 +19,19 @@ const NAV_LINKS = [
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [isNfcRoute, setIsNfcRoute] = useState(false);
 
   useEffect(() => {
+    const paths = ['/linktarjeta', '/tarjeta', '/ariel'];
+    setIsNfcRoute(paths.includes(window.location.pathname.toLowerCase()));
+  }, []);
+
+  useEffect(() => {
+    if (isNfcRoute) return;
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [isNfcRoute]);
 
   const navStyle: React.CSSProperties = {
     position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
@@ -36,6 +44,10 @@ function App() {
       padding: '.85rem 2rem',
     } : {})
   };
+
+  if (isNfcRoute) {
+    return <NFCCard />;
+  }
 
   return (
     <div style={{ background: 'var(--void)', minHeight: '100vh', color: 'var(--text-1)' }}>
